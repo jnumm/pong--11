@@ -1,0 +1,6 @@
+#ifndef PONG_CONFIG_HPP
+#define PONG_CONFIG_HPP
+
+#define PONG_VERSION "@PONG_VERSION@"
+
+#endif // PONG_CONFIG_HPP
