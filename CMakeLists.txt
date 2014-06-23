@@ -15,7 +15,7 @@ endif()
 # Link mingw support libraries statically by default.
 if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS
-      -static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS})
+      "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 configure_file(${CMAKE_SOURCE_DIR}/config.hpp.in
