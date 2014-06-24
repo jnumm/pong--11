@@ -20,10 +20,10 @@
 Ball::Ball(float x, float y, bool stopped)
 : CircleShape{radius, 100},
   generator_{},
-  distribution_{velocity * 0.5, velocity},
+  distribution_{velocity * 0.5f, velocity},
   bool_distribution_{0.5},
-  velocityVector_{std::sqrt(velocity * velocity / 2.0f),
-                  std::sqrt(velocity * velocity / 2.0f)},
+  velocityVector_{std::sqrt(velocity * velocity / 2.f),
+                  std::sqrt(velocity * velocity / 2.f)},
   stopped_{stopped}
 {
   std::random_device rd;
@@ -59,10 +59,10 @@ void Ball::bounceX()
   float x{distribution_(generator_)};
   float y{std::sqrt(velocity * velocity - x * x)};
 
-  if (velocityVector_.x > 0)
+  if (velocityVector_.x > 0.f)
     x = -x;
 
-  if (velocityVector_.y < 0)
+  if (velocityVector_.y < 0.f)
     y = -y;
 
   velocityVector_.x = x;

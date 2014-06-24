@@ -27,9 +27,9 @@ Game::Game()
 : window_{{800, 600}, "Pong v" PONG_VERSION},
   font_{},
   text_{{}, font_, 50},
-  paddle1_{10.0, getHeight() / 2 - 50},
-  paddle2_{getWidth() - 30, getHeight() / 2 - 50},
-  ball_{getWidth() / 2, getHeight() / 2, true}
+  paddle1_{10.f, getHeight() / 2.f - 50.f},
+  paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
+  ball_{getWidth() / 2.f, getHeight() / 2.f, true}
 {
   window_.setFramerateLimit(60);
 
@@ -75,7 +75,7 @@ void Game::update()
 
   ball_.updatePosition();
 
-  if (ball_.getTop() < 0.0 || ball_.getBottom() > getHeight()) {
+  if (ball_.getTop() < 0.f || ball_.getBottom() > getHeight()) {
     ball_.bounceY();
   }
   else if (paddle1_.getGlobalBounds().intersects(ball_.getGlobalBounds())) {
@@ -86,15 +86,15 @@ void Game::update()
     ball_.setRight(paddle2_.getLeft());
     ball_.bounceX();
   }
-  else if (ball_.getRight() < 0.0) {
+  else if (ball_.getRight() < 0.f) {
     paddle2_.addPoints(1);
-    ball_.setPosition(getWidth() / 2, getHeight() / 2);
+    ball_.setPosition(getWidth() / 2.f, getHeight() / 2.f);
     ball_.setRandomDirection();
     ball_.stop();
   }
   else if (ball_.getLeft() > getWidth()) {
     paddle1_.addPoints(1);
-    ball_.setPosition(getWidth() / 2, getHeight() / 2);
+    ball_.setPosition(getWidth() / 2.f, getHeight() / 2.f);
     ball_.setRandomDirection();
     ball_.stop();
   }
@@ -105,8 +105,7 @@ void Game::updatePaddleControls(Paddle& paddle,
                                 sf::Keyboard::Key upKey,
                                 sf::Keyboard::Key downKey)
 {
-  if (sf::Keyboard::isKeyPressed(upKey) &&
-      paddle.getTop() > 0) {
+  if (sf::Keyboard::isKeyPressed(upKey) && paddle.getTop() > 0.f) {
     paddle.move(Direction::Up);
   }
 
@@ -125,17 +124,17 @@ void Game::render()
   window_.draw(ball_);
 
   text_.setString(std::to_string(paddle1_.getPoints()));
-  text_.setPosition(getWidth() * 0.25 - text_.getGlobalBounds().width, 10.0);
+  text_.setPosition(getWidth() * 0.25f - text_.getGlobalBounds().width, 10.f);
   window_.draw(text_);
 
   text_.setString(std::to_string(paddle2_.getPoints()));
-  text_.setPosition(getWidth() * 0.75, 10.0);
+  text_.setPosition(getWidth() * 0.75f, 10.f);
   window_.draw(text_);
 
   if (ball_.isStopped()) {
     text_.setString("Press SPACE to start");
     text_.setCharacterSize(15);
-    text_.setPosition(10.0, getHeight() - 25);
+    text_.setPosition(10.f, getHeight() - 25.f);
     window_.draw(text_);
     text_.setCharacterSize(50);
   }

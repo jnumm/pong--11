@@ -27,13 +27,13 @@ Paddle::Paddle(float x, float y)
 void Paddle::move(Direction direction, float offset)
 {
   if (direction == Direction::Left)
-    RectangleShape::move(-offset, 0.0f);
+    RectangleShape::move(-offset, 0.f);
   else if (direction == Direction::Right)
-    RectangleShape::move(offset, 0.0f);
+    RectangleShape::move(offset, 0.f);
   else if (direction == Direction::Up)
-    RectangleShape::move(0.0f, -offset);
+    RectangleShape::move(0.f, -offset);
   else if (direction == Direction::Down)
-    RectangleShape::move(0.0f, offset);
+    RectangleShape::move(0.f, offset);
 }
 
 float Paddle::getLeft() const

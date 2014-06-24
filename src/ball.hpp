@@ -23,8 +23,8 @@
 class Ball : public sf::CircleShape
 {
 public:
-  static constexpr float radius{10.0};
-  static constexpr float velocity{10.0};
+  static constexpr float radius{10.f};
+  static constexpr float velocity{10.f};
 
   Ball(float x, float y, bool stopped = true);
 
