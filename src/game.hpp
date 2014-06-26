@@ -16,6 +16,9 @@
 #ifndef PONG_GAME_HPP
 #define PONG_GAME_HPP
 
+#include <memory>
+#include <random>
+
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
@@ -46,6 +49,8 @@ private:
   Paddle paddle1_;
   Paddle paddle2_;
   Ball ball_;
+
+  std::shared_ptr<std::mt19937> generator_;
 };
 
 #endif // PONG_GAME_HPP

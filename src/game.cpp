@@ -15,8 +15,6 @@
 
 #include "game.hpp"
 
-#include <iostream>
-
 #include "config.hpp"
 #include "direction.hpp"
 #ifdef __MINGW32__
@@ -29,8 +27,12 @@ Game::Game()
   text_{{}, font_, 50},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  ball_{getWidth() / 2.f, getHeight() / 2.f, true}
+  ball_{getWidth() / 2.f, getHeight() / 2.f, nullptr}
 {
+  std::random_device rd;
+  generator_ = std::make_shared<std::mt19937>(rd());
+  ball_.setGenerator(generator_);
+
   window_.setFramerateLimit(60);
 
   ball_.setRandomDirection();

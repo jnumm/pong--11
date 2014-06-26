@@ -17,18 +17,15 @@
 
 #include <cmath>
 
-Ball::Ball(float x, float y, bool stopped)
+Ball::Ball(float x, float y, std::shared_ptr<std::mt19937> generator)
 : CircleShape{radius, 100},
-  generator_{},
+  generator_{generator},
   distribution_{velocity * 0.5f, velocity},
   bool_distribution_{0.5},
   velocityVector_{std::sqrt(velocity * velocity / 2.f),
                   std::sqrt(velocity * velocity / 2.f)},
-  stopped_{stopped}
+  stopped_{true}
 {
-  std::random_device rd;
-  generator_.seed(rd());
-  
   setOrigin(getRadius(), getRadius());
   setPosition(x, y);
 }
@@ -41,13 +38,13 @@ void Ball::updatePosition()
 
 void Ball::setRandomDirection()
 {
-  float x{distribution_(generator_)};
+  float x{distribution_(*generator_)};
   float y{std::sqrt(velocity * velocity - x * x)};
 
-  if (bool_distribution_(generator_))
+  if (bool_distribution_(*generator_))
     x = -x;
 
-  if (bool_distribution_(generator_))
+  if (bool_distribution_(*generator_))
     y = -y;
   
   velocityVector_.x = x;
@@ -56,7 +53,7 @@ void Ball::setRandomDirection()
 
 void Ball::bounceX()
 {
-  float x{distribution_(generator_)};
+  float x{distribution_(*generator_)};
   float y{std::sqrt(velocity * velocity - x * x)};
 
   if (velocityVector_.x > 0.f)
@@ -117,4 +114,14 @@ float Ball::getTop() const
 float Ball::getBottom() const
 {
   return getPosition().y + getRadius();
+}
+
+std::shared_ptr<std::mt19937> Ball::getGenerator() const
+{
+  return generator_;
+}
+
+void Ball::setGenerator(std::shared_ptr<std::mt19937> generator)
+{
+  generator_ = generator;
 }
