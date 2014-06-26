@@ -15,6 +15,8 @@
 
 #include "game.hpp"
 
+#include <stdexcept>
+
 #include "config.hpp"
 #include "direction.hpp"
 #ifdef __MINGW32__
@@ -37,7 +39,8 @@ Game::Game()
 
   ball_.setRandomDirection();
 
-  font_.loadFromFile("font.ttf");
+  if (!font_.loadFromFile("font.ttf"))
+    throw std::runtime_error{"Failed to load font."};
 }
 
 void Game::run()
