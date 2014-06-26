@@ -16,18 +16,19 @@
 #ifndef PONG_BALL_HPP
 #define PONG_BALL_HPP
 
-#include <memory>
 #include <random>
 
 #include <SFML/Graphics.hpp>
 
-class Ball : public sf::CircleShape
+#include "prng_user.hpp"
+
+class Ball : public PrngUser, public sf::CircleShape
 {
 public:
   static constexpr float radius{10.f};
   static constexpr float velocity{10.f};
 
-  Ball(float x, float y, std::shared_ptr<std::mt19937>);
+  Ball(float x, float y);
 
   void updatePosition();
 
@@ -52,11 +53,7 @@ public:
   float getBottom() const;
   void setBottom(float bottom);
 
-  std::shared_ptr<std::mt19937> getGenerator() const;
-  void setGenerator(std::shared_ptr<std::mt19937> generator);
-
 private:
-  std::shared_ptr<std::mt19937> generator_;
   std::uniform_real_distribution<float> distribution_;
   std::bernoulli_distribution bool_distribution_;
 

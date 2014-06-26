@@ -9,7 +9,9 @@ set(pong_SRCS
     game.hpp
     main.cpp
     paddle.cpp
-    paddle.hpp)
+    paddle.hpp
+    prng_user.cpp
+    prng_user.hpp)
 
 if(MINGW)
   set(pong_SRCS ${pong_SRCS} to_string_replacement.hpp)

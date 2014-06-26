@@ -17,9 +17,8 @@
 
 #include <cmath>
 
-Ball::Ball(float x, float y, std::shared_ptr<std::mt19937> generator)
+Ball::Ball(float x, float y)
 : CircleShape{radius, 100},
-  generator_{generator},
   distribution_{velocity * 0.5f, velocity},
   bool_distribution_{0.5},
   velocityVector_{std::sqrt(velocity * velocity / 2.f),
@@ -114,14 +113,4 @@ float Ball::getTop() const
 float Ball::getBottom() const
 {
   return getPosition().y + getRadius();
-}
-
-std::shared_ptr<std::mt19937> Ball::getGenerator() const
-{
-  return generator_;
-}
-
-void Ball::setGenerator(std::shared_ptr<std::mt19937> generator)
-{
-  generator_ = generator;
 }
