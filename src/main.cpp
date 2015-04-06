@@ -13,14 +13,19 @@
  * limitations under the License.
  */
 
+#include <cstring>
 #include <exception>
 #include <iostream>
 
 #include "game.hpp"
 
-int main() {
+
+int main(int argc, char *argv[]) {
   try {
-    Game{}.run();
+    if (argc > 1 && std::strcmp(argv[1], "-s") == 0)
+      Game{}.run(true);
+    else
+      Game{}.run(false);
   }
   catch (const std::exception& e) {
     std::cerr << "Exception: " << e.what() << std::endl;

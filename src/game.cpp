@@ -29,7 +29,9 @@ Game::Game()
   text_{{}, font_, 50},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  ball_{getWidth() / 2.f, getHeight() / 2.f}
+  ball_{getWidth() / 2.f, getHeight() / 2.f},
+  player1_cpu_{false},
+  player2_cpu_{false}
 {
   std::random_device rd;
   generator_ = std::make_shared<std::mt19937>(rd());
@@ -43,8 +45,11 @@ Game::Game()
     throw std::runtime_error{"Failed to load font."};
 }
 
-void Game::run()
+void Game::run(bool singleplayer)
 {
+  if (singleplayer)
+    player2_cpu_ = true;
+
   sf::Event event;
 
   while (window_.isOpen()) {
@@ -74,8 +79,15 @@ void Game::run()
 
 void Game::update()
 {
-  updatePaddleControls(paddle1_, sf::Keyboard::W,  sf::Keyboard::S);
-  updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
+  if (!player1_cpu_)
+    updatePaddleControls(paddle1_, sf::Keyboard::W,  sf::Keyboard::S);
+  else
+    updatePaddleAuto(paddle1_);
+
+  if (!player2_cpu_)
+    updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
+  else
+    updatePaddleAuto(paddle2_);
 
 
   ball_.updatePosition();
@@ -116,6 +128,17 @@ void Game::updatePaddleControls(Paddle& paddle,
 
   if (sf::Keyboard::isKeyPressed(downKey) &&
       paddle.getBottom() < getHeight()) {
+    paddle.move(Direction::Down);
+  }
+}
+
+void Game::updatePaddleAuto(Paddle& paddle)
+{
+  if (paddle.getTop() > ball_.getBottom() && paddle.getTop() > 0.f) {
+    paddle.move(Direction::Up);
+  }
+  else if (paddle.getBottom() < ball_.getTop() &&
+           paddle.getBottom() < getHeight()) {
     paddle.move(Direction::Down);
   }
 }

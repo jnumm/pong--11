@@ -29,13 +29,14 @@ class Game
 public:
   Game();
 
-  void run();
+  void run(bool singleplayer);
 
 private:
   void update();
   void updatePaddleControls(Paddle& paddle,
                             sf::Keyboard::Key upKey,
                             sf::Keyboard::Key downKey);
+  void updatePaddleAuto(Paddle& paddle);
   void render();
 
   float getWidth() const;
@@ -51,6 +52,8 @@ private:
   Ball ball_;
 
   std::shared_ptr<std::mt19937> generator_;
+
+  bool player1_cpu_, player2_cpu_;
 };
 
 #endif // PONG_GAME_HPP
