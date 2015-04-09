@@ -26,6 +26,7 @@ public:
   static constexpr float width{20.f};
   static constexpr float height{100.f};
   static constexpr float velocity{20.f};
+  static constexpr float slow_velocity{10.f};
 
   Paddle(float x, float y);
 

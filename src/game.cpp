@@ -15,6 +15,7 @@
 
 #include "game.hpp"
 
+#include <cmath> // For abs
 #include <stdexcept>
 
 #include "config.hpp"
@@ -126,20 +127,25 @@ void Game::updatePaddleControls(Paddle& paddle,
     paddle.move(Direction::Up);
   }
 
-  if (sf::Keyboard::isKeyPressed(downKey) &&
-      paddle.getBottom() < getHeight()) {
+  if (sf::Keyboard::isKeyPressed(downKey) && paddle.getBottom() < getHeight()) {
     paddle.move(Direction::Down);
   }
 }
 
+/*
+ * This is the CPU player logic.
+ * The paddle will only move if it is a certain distance away from the ball.
+ */
 void Game::updatePaddleAuto(Paddle& paddle)
 {
-  if (paddle.getTop() > ball_.getBottom() && paddle.getTop() > 0.f) {
-    paddle.move(Direction::Up);
-  }
-  else if (paddle.getBottom() < ball_.getTop() &&
-           paddle.getBottom() < getHeight()) {
-    paddle.move(Direction::Down);
+  if (std::abs(ball_.getLeft() - paddle.getLeft()) < 200.f) {
+    if (paddle.getTop() > ball_.getBottom() && paddle.getTop() > 0.f) {
+      paddle.move(Direction::Up, Paddle::slow_velocity);
+    }
+    else if (paddle.getBottom() < ball_.getTop() &&
+             paddle.getBottom() < getHeight()) {
+      paddle.move(Direction::Down, Paddle::slow_velocity);
+    }
   }
 }
 
