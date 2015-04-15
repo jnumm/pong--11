@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,10 @@
  * limitations under the License.
  */
 
-#include <clocale>
-#include <cstring>
-#include <exception>
-#include <iostream>
+#ifndef I18N_HPP
+#define I18N_HPP
 
-#include "config.hpp"
-#include "game.hpp"
-#include "i18n.hpp"
+#include <libintl.h>
+#define _(String) gettext(String)
 
-
-int main(int argc, char *argv[]) {
-  std::setlocale(LC_ALL, "");
-  bindtextdomain("pong--11", LOCALEDIR);
-  textdomain("pong--11");
-
-  try {
-    if (argc > 1 && std::strcmp(argv[1], "-s") == 0)
-      Game{}.run(true);
-    else
-      Game{}.run(false);
-  }
-  catch (const std::exception& e) {
-    std::cerr << _("Exception: ") << e.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-}
+#endif // I18N_HPP

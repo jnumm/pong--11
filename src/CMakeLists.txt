@@ -7,11 +7,14 @@ set(pong_SRCS
     direction.hpp
     game.cpp
     game.hpp
+    i18n.hpp
     main.cpp
     paddle.cpp
     paddle.hpp
     prng_user.cpp
-    prng_user.hpp)
+    prng_user.hpp
+    wchar_conversion.hpp
+)
 
 if(MINGW)
   set(pong_SRCS ${pong_SRCS} to_string_replacement.hpp)

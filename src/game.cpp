@@ -20,9 +20,11 @@
 
 #include "config.hpp"
 #include "direction.hpp"
+#include "i18n.hpp"
 #ifdef __MINGW32__
 #include "to_string_replacement.hpp"
 #endif
+#include "wchar_conversion.hpp"
 
 Game::Game()
 : window_{{800, 600}, "Pong v" PONG_VERSION},
@@ -43,7 +45,7 @@ Game::Game()
   ball_.setRandomDirection();
 
   if (!font_.loadFromFile("font.ttf"))
-    throw std::runtime_error{"Failed to load font."};
+    throw std::runtime_error{_("Failed to load font.")};
 }
 
 void Game::run(bool singleplayer)
@@ -166,7 +168,9 @@ void Game::render()
   window_.draw(text_);
 
   if (ball_.isStopped()) {
-    text_.setString("Press SPACE to start");
+    // Converted to const wchar_t* to make SFML display international characters
+    // correctly.
+    text_.setString(to_wstr(_("Press SPACE to start")));
     text_.setCharacterSize(15);
     text_.setPosition(10.f, getHeight() - 25.f);
     window_.draw(text_);

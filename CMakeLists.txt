@@ -23,4 +23,5 @@ configure_file(${CMAKE_SOURCE_DIR}/config.hpp.in
 
 include_directories(${CMAKE_BINARY_DIR})
 
+add_subdirectory(po)
 add_subdirectory(src)
