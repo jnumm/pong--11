@@ -28,11 +28,22 @@ int main(int argc, char *argv[]) {
   bindtextdomain("pong--11", LOCALEDIR);
   textdomain("pong--11");
 
+  bool isSingleplayer = false;
+
+  if (argc > 1) {
+    for (int i = 1; i < argc; ++i) {
+      if (std::strcmp(argv[i], "-s") == 0) {
+        isSingleplayer = true;
+      }
+      else {
+        std::fprintf(stderr, _("Invalid option: '%s'\n"), argv[i]);
+        return EXIT_FAILURE;
+      }
+    }
+  }
+
   try {
-    if (argc > 1 && std::strcmp(argv[1], "-s") == 0)
-      Game{}.run(true);
-    else
-      Game{}.run(false);
+    Game{}.run(isSingleplayer);
   }
   catch (const std::exception& e) {
     std::cerr << _("Exception: ") << e.what() << std::endl;
