@@ -46,6 +46,7 @@ private:
 
   sf::Font font_;
   sf::Text text_;
+  sf::String startMessage_;
 
   Paddle paddle1_;
   Paddle paddle2_;

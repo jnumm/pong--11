@@ -13,7 +13,6 @@ set(pong_SRCS
     paddle.hpp
     prng_user.cpp
     prng_user.hpp
-    wchar_conversion.hpp
 )
 
 if(MINGW)

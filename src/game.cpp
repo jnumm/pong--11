@@ -24,12 +24,12 @@
 #ifdef __MINGW32__
 #include "to_string_replacement.hpp"
 #endif
-#include "wchar_conversion.hpp"
 
 Game::Game()
 : window_{{800, 600}, "Pong v" PONG_VERSION},
   font_{},
   text_{{}, font_, 50},
+  startMessage_{},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
   ball_{getWidth() / 2.f, getHeight() / 2.f},
@@ -46,6 +46,12 @@ Game::Game()
 
   if (!font_.loadFromFile("font.ttf"))
     throw std::runtime_error{_("Failed to load font.")};
+
+  const char* startMessageMb = _("Press SPACE to start");
+  std::size_t len = std::mbstowcs(nullptr, startMessageMb, 0) + 1;
+  std::vector<wchar_t> wstr(len);
+  std::mbstowcs(wstr.data(), startMessageMb, wstr.size());
+  startMessage_ = wstr.data();
 }
 
 void Game::run(bool singleplayer)
@@ -168,9 +174,7 @@ void Game::render()
   window_.draw(text_);
 
   if (ball_.isStopped()) {
-    // Converted to const wchar_t* to make SFML display international characters
-    // correctly.
-    text_.setString(to_wstr(_("Press SPACE to start")));
+    text_.setString(startMessage_);
     text_.setCharacterSize(15);
     text_.setPosition(10.f, getHeight() - 25.f);
     window_.draw(text_);
