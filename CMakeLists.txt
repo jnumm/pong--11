@@ -3,6 +3,8 @@ project(pong)
 
 set(PONG_VERSION 1.2)
 
+option(ENABLE_NLS "Build with native language support" ON)
+
 include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH
@@ -23,5 +25,8 @@ configure_file(${CMAKE_SOURCE_DIR}/config.hpp.in
 
 include_directories(${CMAKE_BINARY_DIR})
 
-add_subdirectory(po)
 add_subdirectory(src)
+
+if(ENABLE_NLS)
+  add_subdirectory(po)
+endif()
