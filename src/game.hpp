@@ -50,7 +50,7 @@ private:
 
   Paddle paddle1_;
   Paddle paddle2_;
-  Ball ball_;
+  std::vector<Ball> balls_;
 
   std::shared_ptr<std::mt19937> generator_;
 

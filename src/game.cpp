@@ -32,17 +32,19 @@ Game::Game()
   startMessage_{},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  ball_{getWidth() / 2.f, getHeight() / 2.f},
+  balls_{10, {getWidth() / 2.f, getHeight() / 2.f}},
   player1_cpu_{false},
   player2_cpu_{false}
 {
   std::random_device rd;
   generator_ = std::make_shared<std::mt19937>(rd());
-  ball_.setGenerator(generator_);
+
+  for (Ball& ball : balls_) {
+    ball.setGenerator(generator_);
+    ball.setRandomDirection();
+  }
 
   window_.setFramerateLimit(60);
-
-  ball_.setRandomDirection();
 
   if (!font_.loadFromFile("font.ttf"))
     throw std::runtime_error{_("Failed to load font.")};
@@ -73,7 +75,8 @@ void Game::run(bool singleplayer)
             window_.close();
             break;
           case sf::Keyboard::Space:
-            ball_.start();
+            for (Ball& ball : balls_)
+              ball.start();
             break;
           default:
             break;
@@ -99,30 +102,32 @@ void Game::update()
     updatePaddleAuto(paddle2_);
 
 
-  ball_.updatePosition();
+  for (Ball& ball : balls_) {
+    ball.updatePosition();
 
-  if (ball_.getTop() < 0.f || ball_.getBottom() > getHeight()) {
-    ball_.bounceY();
-  }
-  else if (paddle1_.getGlobalBounds().intersects(ball_.getGlobalBounds())) {
-    ball_.setLeft(paddle1_.getRight());
-    ball_.bounceX();
-  }
-  else if (paddle2_.getGlobalBounds().intersects(ball_.getGlobalBounds())) {
-    ball_.setRight(paddle2_.getLeft());
-    ball_.bounceX();
-  }
-  else if (ball_.getRight() < 0.f) {
-    paddle2_.addPoints(1);
-    ball_.setPosition(getWidth() / 2.f, getHeight() / 2.f);
-    ball_.setRandomDirection();
-    ball_.stop();
-  }
-  else if (ball_.getLeft() > getWidth()) {
-    paddle1_.addPoints(1);
-    ball_.setPosition(getWidth() / 2.f, getHeight() / 2.f);
-    ball_.setRandomDirection();
-    ball_.stop();
+    if (ball.getTop() < 0.f || ball.getBottom() > getHeight()) {
+      ball.bounceY();
+    }
+    else if (paddle1_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
+      ball.setLeft(paddle1_.getRight());
+      ball.bounceX();
+    }
+    else if (paddle2_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
+      ball.setRight(paddle2_.getLeft());
+      ball.bounceX();
+    }
+    else if (ball.getRight() < 0.f) {
+      paddle2_.addPoints(1);
+      ball.setPosition(getWidth() / 2.f, getHeight() / 2.f);
+      ball.setRandomDirection();
+      ball.stop();
+    }
+    else if (ball.getLeft() > getWidth()) {
+      paddle1_.addPoints(1);
+      ball.setPosition(getWidth() / 2.f, getHeight() / 2.f);
+      ball.setRandomDirection();
+      ball.stop();
+    }
   }
 }
 
@@ -146,13 +151,15 @@ void Game::updatePaddleControls(Paddle& paddle,
  */
 void Game::updatePaddleAuto(Paddle& paddle)
 {
-  if (std::abs(ball_.getLeft() - paddle.getLeft()) < 200.f) {
-    if (paddle.getTop() > ball_.getBottom() && paddle.getTop() > 0.f) {
-      paddle.move(Direction::Up, Paddle::slow_velocity);
-    }
-    else if (paddle.getBottom() < ball_.getTop() &&
-             paddle.getBottom() < getHeight()) {
-      paddle.move(Direction::Down, Paddle::slow_velocity);
+  for (Ball& ball : balls_) {
+    if (std::abs(ball.getLeft() - paddle.getLeft()) < 200.f) {
+      if (paddle.getTop() > ball.getBottom() && paddle.getTop() > 0.f) {
+        paddle.move(Direction::Up, Paddle::slow_velocity);
+      }
+      else if (paddle.getBottom() < ball.getTop() &&
+               paddle.getBottom() < getHeight()) {
+        paddle.move(Direction::Down, Paddle::slow_velocity);
+      }
     }
   }
 }
@@ -163,7 +170,8 @@ void Game::render()
 
   window_.draw(paddle1_);
   window_.draw(paddle2_);
-  window_.draw(ball_);
+  for (Ball& ball : balls_)
+    window_.draw(ball);
 
   text_.setString(std::to_string(paddle1_.getPoints()));
   text_.setPosition(getWidth() * 0.25f - text_.getGlobalBounds().width, 10.f);
@@ -173,12 +181,14 @@ void Game::render()
   text_.setPosition(getWidth() * 0.75f, 10.f);
   window_.draw(text_);
 
-  if (ball_.isStopped()) {
-    text_.setString(startMessage_);
-    text_.setCharacterSize(15);
-    text_.setPosition(10.f, getHeight() - 25.f);
-    window_.draw(text_);
-    text_.setCharacterSize(50);
+  for (Ball& ball : balls_) {
+    if (ball.isStopped()) {
+      text_.setString(startMessage_);
+      text_.setCharacterSize(15);
+      text_.setPosition(10.f, getHeight() - 25.f);
+      window_.draw(text_);
+      text_.setCharacterSize(50);
+    }
   }
 
   window_.display();
