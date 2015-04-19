@@ -21,7 +21,7 @@
 #include "config.hpp"
 #include "direction.hpp"
 #include "i18n.hpp"
-#ifdef __MINGW32__
+#ifndef HAVE_STD_TO_STRING
 #include "to_string_replacement.hpp"
 #endif
 

@@ -25,7 +25,7 @@
 
 int main(int argc, char *argv[]) {
   std::setlocale(LC_ALL, "");
-  #if ENABLE_NLS
+  #ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
   textdomain("pong--11");
   #endif // ENABLE_NLS

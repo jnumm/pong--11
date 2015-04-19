@@ -16,7 +16,7 @@
 #ifndef I18N_HPP
 #define I18N_HPP
 
-#if ENABLE_NLS
+#ifdef ENABLE_NLS
 #include <libintl.h>
 #define _(String) gettext(String)
 #else

@@ -15,7 +15,7 @@ set(pong_SRCS
     prng_user.hpp
 )
 
-if(MINGW)
+if(NOT HAVE_STD_TO_STRING)
   set(pong_SRCS ${pong_SRCS} to_string_replacement.hpp)
   find_package(Boost 1.20.0 REQUIRED)
   include_directories(${Boost_INCLUDE_DIRS})
