@@ -21,10 +21,18 @@ if(NOT HAVE_STD_TO_STRING)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-find_package(SFML 2 REQUIRED system window graphics)
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS
+  "/ENTRY:\"mainCRTStartup\" ${CMAKE_EXE_LINKER_FLAGS}")
+endif()
+
+if(STATIC_LINK)
+  set(SFML_STATIC_LIBRARIES ON)
+endif()
+find_package(SFML 2 REQUIRED graphics window system)
 include_directories(${SFML_INCLUDE_DIR})
 
 add_executable(pong WIN32 ${pong_SRCS})
-target_link_libraries(pong ${SFML_LIBRARIES})
+target_link_libraries(pong ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 install(TARGETS pong DESTINATION ${CMAKE_INSTALL_BINDIR})
