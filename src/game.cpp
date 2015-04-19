@@ -188,6 +188,7 @@ void Game::render()
       text_.setPosition(10.f, getHeight() - 25.f);
       window_.draw(text_);
       text_.setCharacterSize(50);
+      break;
     }
   }
 
