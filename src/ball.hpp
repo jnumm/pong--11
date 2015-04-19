@@ -25,8 +25,8 @@
 class Ball : public PrngUser, public sf::CircleShape
 {
 public:
-  static constexpr float radius{10.f};
-  static constexpr float velocity{10.f};
+  static const float radius;
+  static const float velocity;
 
   Ball(float x, float y);
 

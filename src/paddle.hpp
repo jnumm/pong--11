@@ -25,10 +25,10 @@ enum class Direction : std::int_fast8_t;
 class Paddle : public sf::RectangleShape
 {
 public:
-  static constexpr float width{20.f};
-  static constexpr float height{100.f};
-  static constexpr float velocity{20.f};
-  static constexpr float slow_velocity{10.f};
+  static const float width;
+  static const float height;
+  static const float velocity;
+  static const float slow_velocity;
 
   Paddle(float x, float y);
 

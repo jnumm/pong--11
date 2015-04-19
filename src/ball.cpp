@@ -17,6 +17,9 @@
 
 #include <cmath>
 
+const float Ball::radius = 10.f;
+const float Ball::velocity = 10.f;
+
 Ball::Ball(float x, float y)
 : CircleShape{radius, 100},
   distribution_{velocity * 0.5f, velocity},

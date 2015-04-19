@@ -32,7 +32,7 @@ Game::Game()
   startMessage_{},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  balls_{10, {getWidth() / 2.f, getHeight() / 2.f}},
+  balls_(10, {getWidth() / 2.f, getHeight() / 2.f}),
   player1_cpu_{false},
   player2_cpu_{false}
 {
@@ -197,10 +197,10 @@ void Game::render()
 
 float Game::getWidth() const
 {
-  return window_.getSize().x;
+  return static_cast<float>(window_.getSize().x);
 }
 
 float Game::getHeight() const
 {
-  return window_.getSize().y;
+  return static_cast<float>(window_.getSize().y);
 }
