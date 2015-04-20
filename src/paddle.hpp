@@ -16,9 +16,11 @@
 #ifndef PONG_PADDLE_HPP
 #define PONG_PADDLE_HPP
 
+#include <cstdint>
+
 #include <SFML/Graphics.hpp>
 
-enum class Direction;
+enum class Direction : std::int_fast8_t;
 
 class Paddle : public sf::RectangleShape
 {

@@ -1,4 +1,4 @@
-/* Copyright 2014 Juhani Numminen
+/* Copyright 2014-2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 #ifndef PONG_DIRECTION_HPP
 #define PONG_DIRECTION_HPP
 
-enum class Direction
+#include <cstdint>
+
+enum class Direction : std::int_fast8_t
 {
   Left,
   Right,
