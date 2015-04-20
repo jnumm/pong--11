@@ -2,17 +2,31 @@ cmake_minimum_required(VERSION 2.6)
 project(pong)
 
 set(PONG_VERSION 1.2)
+message(STATUS "Preparing to build ${PROJECT_NAME} v${PONG_VERSION}")
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
 
 # User options
 option(ENABLE_NLS "Build with native language support" ON)
 option(STATIC_LINK "Link statically" OFF)
 
+if(ENABLE_NLS)
+  message(STATUS "Building with native language support")
+else()
+  message(STATUS "Building without native language support")
+endif()
+if(STATIC_LINK)
+  message(STATUS "Linking statically")
+else()
+  message(STATUS "Linking dynamically")
+endif()
+
 # Build flags, platform checks and configure file
 if(STATIC_LINK)
-  set(CMAKE_EXE_LINKER_FLAGS
-  "-static-libgcc -static-libstdc++ -static ${CMAKE_EXE_LINKER_FLAGS}")
+  if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_EXE_LINKER_FLAGS
+        "-static-libgcc -static-libstdc++ -static ${CMAKE_EXE_LINKER_FLAGS}")
+  endif()
 endif()
 
 include(CheckCXXCompilerFlag)
