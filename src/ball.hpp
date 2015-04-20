@@ -1,4 +1,4 @@
-/* Copyright 2014 Juhani Numminen
+/* Copyright 2014-2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ class Ball : public PrngUser, public sf::CircleShape
 {
 public:
   static const float radius;
-  static const float velocity;
+  static const float speed;
 
   Ball(float x, float y);
 
@@ -44,7 +44,7 @@ public:
   float getLeft() const;
   void setLeft(float left);
 
-  float getRight() const;  
+  float getRight() const;
   void setRight(float right);
 
   float getTop() const;
@@ -55,11 +55,11 @@ public:
 
 private:
   std::uniform_real_distribution<float> distribution_;
-  std::bernoulli_distribution bool_distribution_;
+  std::bernoulli_distribution boolDistribution_;
 
   sf::Vector2f velocityVector_;
 
-  bool stopped_;
+  bool isStopped_;
 };
 
 #endif // PONG_BALL_HPP

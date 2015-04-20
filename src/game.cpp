@@ -15,7 +15,7 @@
 
 #include "game.hpp"
 
-#include <cmath> // For abs
+#include <cmath>
 #include <stdexcept>
 
 #include "config.hpp"
@@ -33,8 +33,8 @@ Game::Game()
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
   balls_(10, {getWidth() / 2.f, getHeight() / 2.f}),
-  player1_cpu_{false},
-  player2_cpu_{false}
+  isPlayer1Cpu_{false},
+  isPlayer2Cpu_{false}
 {
   std::random_device rd;
   generator_ = std::make_shared<std::mt19937>(rd());
@@ -56,10 +56,9 @@ Game::Game()
   startMessage_ = wstr.data();
 }
 
-void Game::run(bool singleplayer)
+void Game::run(bool isSingleplayer)
 {
-  if (singleplayer)
-    player2_cpu_ = true;
+  isPlayer2Cpu_ = isSingleplayer;
 
   sf::Event event;
 
@@ -91,16 +90,15 @@ void Game::run(bool singleplayer)
 
 void Game::update()
 {
-  if (!player1_cpu_)
-    updatePaddleControls(paddle1_, sf::Keyboard::W,  sf::Keyboard::S);
-  else
+  if (isPlayer1Cpu_)
     updatePaddleAuto(paddle1_);
-
-  if (!player2_cpu_)
-    updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
   else
-    updatePaddleAuto(paddle2_);
+    updatePaddleControls(paddle1_, sf::Keyboard::W,  sf::Keyboard::S);
 
+  if (isPlayer2Cpu_)
+    updatePaddleAuto(paddle2_);
+  else
+    updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
 
   for (Ball& ball : balls_) {
     ball.updatePosition();
@@ -154,11 +152,11 @@ void Game::updatePaddleAuto(Paddle& paddle)
   for (Ball& ball : balls_) {
     if (std::abs(ball.getLeft() - paddle.getLeft()) < 200.f) {
       if (paddle.getTop() > ball.getBottom() && paddle.getTop() > 0.f) {
-        paddle.move(Direction::Up, Paddle::slow_velocity);
+        paddle.move(Direction::Up, Paddle::slowSpeed);
       }
       else if (paddle.getBottom() < ball.getTop() &&
                paddle.getBottom() < getHeight()) {
-        paddle.move(Direction::Down, Paddle::slow_velocity);
+        paddle.move(Direction::Down, Paddle::slowSpeed);
       }
     }
   }

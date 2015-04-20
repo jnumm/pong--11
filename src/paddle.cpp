@@ -19,8 +19,8 @@
 
 const float Paddle::width = 20.f;
 const float Paddle::height = 100.f;
-const float Paddle::velocity = 20.f;
-const float Paddle::slow_velocity = 10.f;
+const float Paddle::speed = 20.f;
+const float Paddle::slowSpeed = 10.f;
 
 Paddle::Paddle(float x, float y)
 : RectangleShape{{width, height}},

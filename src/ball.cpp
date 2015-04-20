@@ -1,4 +1,4 @@
-/* Copyright 2014 Juhani Numminen
+/* Copyright 2014-2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@
 #include <cmath>
 
 const float Ball::radius = 10.f;
-const float Ball::velocity = 10.f;
+const float Ball::speed = 10.f;
 
 Ball::Ball(float x, float y)
 : CircleShape{radius, 100},
-  distribution_{velocity * 0.5f, velocity},
-  bool_distribution_{0.5},
-  velocityVector_{std::sqrt(velocity * velocity / 2.f),
-                  std::sqrt(velocity * velocity / 2.f)},
-  stopped_{true}
+  distribution_{speed * 0.5f, speed},
+  boolDistribution_{0.5},
+  velocityVector_{std::sqrt(speed * speed / 2.f),
+                  std::sqrt(speed * speed / 2.f)},
+  isStopped_{true}
 {
   setOrigin(getRadius(), getRadius());
   setPosition(x, y);
@@ -34,21 +34,21 @@ Ball::Ball(float x, float y)
 
 void Ball::updatePosition()
 {
-  if (!stopped_)
+  if (!isStopped_)
     move(velocityVector_);
 }
 
 void Ball::setRandomDirection()
 {
   float x{distribution_(*generator_)};
-  float y{std::sqrt(velocity * velocity - x * x)};
+  float y{std::sqrt(speed * speed - x * x)};
 
-  if (bool_distribution_(*generator_))
+  if (boolDistribution_(*generator_))
     x = -x;
 
-  if (bool_distribution_(*generator_))
+  if (boolDistribution_(*generator_))
     y = -y;
-  
+
   velocityVector_.x = x;
   velocityVector_.y = y;
 }
@@ -56,7 +56,7 @@ void Ball::setRandomDirection()
 void Ball::bounceX()
 {
   float x{distribution_(*generator_)};
-  float y{std::sqrt(velocity * velocity - x * x)};
+  float y{std::sqrt(speed * speed - x * x)};
 
   if (velocityVector_.x > 0.f)
     x = -x;
@@ -75,17 +75,17 @@ void Ball::bounceY()
 
 void Ball::start()
 {
-  stopped_ = false;
+  isStopped_ = false;
 }
 
 void Ball::stop()
 {
-  stopped_ = true;
+  isStopped_ = true;
 }
 
 bool Ball::isStopped() const
 {
-  return stopped_;
+  return isStopped_;
 }
 
 float Ball::getLeft() const

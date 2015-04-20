@@ -29,7 +29,7 @@ class Game
 public:
   Game();
 
-  void run(bool singleplayer);
+  void run(bool isSingleplayer);
 
 private:
   void update();
@@ -54,7 +54,7 @@ private:
 
   std::shared_ptr<std::mt19937> generator_;
 
-  bool player1_cpu_, player2_cpu_;
+  bool isPlayer1Cpu_, isPlayer2Cpu_;
 };
 
 #endif // PONG_GAME_HPP

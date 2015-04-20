@@ -3,9 +3,9 @@
 
 #define PONG_VERSION "@PONG_VERSION@"
 
-#cmakedefine ENABLE_NLS
+#cmakedefine ENABLE_NLS 1
 #define LOCALEDIR "@CMAKE_INSTALL_FULL_LOCALEDIR@"
 
-#cmakedefine HAVE_STD_TO_STRING
+#cmakedefine HAVE_STD_TO_STRING 1
 
 #endif // PONG_CONFIG_HPP

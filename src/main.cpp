@@ -14,16 +14,16 @@
  */
 
 #include <clocale>
+#include <cstdio>
 #include <cstring>
 #include <exception>
-#include <iostream>
 
 #include "config.hpp"
 #include "game.hpp"
 #include "i18n.hpp"
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char** argv) {
   std::setlocale(LC_ALL, "");
   #ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     Game{}.run(isSingleplayer);
   }
   catch (const std::exception& e) {
-    std::cerr << _("Exception: ") << e.what() << std::endl;
+    std::fprintf(stderr, _("Exception: %s\n"), e.what());
     return EXIT_FAILURE;
   }
 }

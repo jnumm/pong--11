@@ -27,12 +27,12 @@ class Paddle : public sf::RectangleShape
 public:
   static const float width;
   static const float height;
-  static const float velocity;
-  static const float slow_velocity;
+  static const float speed;
+  static const float slowSpeed;
 
   Paddle(float x, float y);
 
-  void move(Direction direction, float offset = velocity);
+  void move(Direction direction, float offset = speed);
 
   float getRight() const;
   float getLeft() const;
