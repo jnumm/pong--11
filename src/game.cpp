@@ -114,7 +114,8 @@ void Game::update()
       ball.setRight(paddle2_.getLeft());
       ball.bounceX();
     }
-    else if (ball.getRight() < 0.f) {
+
+    if (ball.getRight() < 0.f) {
       paddle2_.addPoints(1);
       ball.setPosition(getWidth() / 2.f, getHeight() / 2.f);
       ball.setRandomDirection();
