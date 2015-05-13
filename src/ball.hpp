@@ -29,6 +29,8 @@ public:
   static const float speed;
 
   Ball(float x, float y);
+  Ball(float x, float y, bool stopped,
+       std::shared_ptr<std::mt19937> generator, bool randomDirection);
 
   void updatePosition();
 

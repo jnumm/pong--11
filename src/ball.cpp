@@ -32,6 +32,23 @@ Ball::Ball(float x, float y)
   setPosition(x, y);
 }
 
+Ball::Ball(float x, float y, bool stopped,
+           std::shared_ptr<std::mt19937> generator, bool randomDirection)
+: CircleShape{radius, 100},
+  PrngUser{generator},
+  distribution_{speed * 0.5f, speed},
+  boolDistribution_{0.5},
+  velocityVector_{std::sqrt(speed * speed / 2.f),
+                  std::sqrt(speed * speed / 2.f)},
+  isStopped_{stopped}
+{
+  setOrigin(getRadius(), getRadius());
+  setPosition(x, y);
+
+  if (randomDirection)
+    setRandomDirection();
+}
+
 void Ball::updatePosition()
 {
   if (!isStopped_)
