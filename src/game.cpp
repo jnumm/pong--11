@@ -15,6 +15,7 @@
 
 #include "game.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
@@ -25,6 +26,8 @@
 #include "to_string_replacement.hpp"
 #endif
 
+const int Game::maxBalls = 30;
+
 Game::Game()
 : window_{{800, 600}, "Pong v" PONG_VERSION},
   font_{},
@@ -32,7 +35,7 @@ Game::Game()
   startMessage_{},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  balls_(10, {getWidth() / 2.f, getHeight() / 2.f}),
+  balls_(1, {getWidth() / 2.f, getHeight() / 2.f}),
   isPlayer1Cpu_{false},
   isPlayer2Cpu_{false}
 {
@@ -100,6 +103,9 @@ void Game::update()
   else
     updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
 
+  bool shouldAddBall = false;
+  float x, y;
+
   for (Ball& ball : balls_) {
     ball.updatePosition();
 
@@ -109,10 +115,16 @@ void Game::update()
     else if (paddle1_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
       ball.setLeft(paddle1_.getRight());
       ball.bounceX();
+      shouldAddBall = true;
+      x = ball.getLeft();
+      y = ball.getTop();
     }
     else if (paddle2_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
       ball.setRight(paddle2_.getLeft());
       ball.bounceX();
+      shouldAddBall = true;
+      x = ball.getLeft();
+      y = ball.getTop();
     }
 
     if (ball.getRight() < 0.f) {
@@ -128,6 +140,19 @@ void Game::update()
       ball.stop();
     }
   }
+
+  balls_.erase(std::remove_if(std::begin(balls_),
+                              std::end(balls_),
+                              [&](const Ball& ball) {
+                                return balls_.size() > 1 && ball.isStopped();
+                              }),
+               std::end(balls_));
+
+  if (shouldAddBall && balls_.size() < maxBalls) {
+    balls_.emplace_back(x, y, false, generator_, true);
+  }
+
+  window_.setTitle("nBalls: " + std::to_string(balls_.size()));
 }
 
 
@@ -169,7 +194,7 @@ void Game::render()
 
   window_.draw(paddle1_);
   window_.draw(paddle2_);
-  for (Ball& ball : balls_)
+  for (const Ball& ball : balls_)
     window_.draw(ball);
 
   text_.setString(std::to_string(paddle1_.getPoints()));
@@ -180,7 +205,7 @@ void Game::render()
   text_.setPosition(getWidth() * 0.75f, 10.f);
   window_.draw(text_);
 
-  for (Ball& ball : balls_) {
+  for (const Ball& ball : balls_) {
     if (ball.isStopped()) {
       text_.setString(startMessage_);
       text_.setCharacterSize(15);

@@ -42,6 +42,8 @@ private:
   float getWidth() const;
   float getHeight() const;
 
+  static const int maxBalls;
+
   sf::RenderWindow window_;
 
   sf::Font font_;
