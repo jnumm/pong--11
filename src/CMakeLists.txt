@@ -23,7 +23,7 @@ endif()
 
 if(MSVC)
   set(CMAKE_EXE_LINKER_FLAGS
-  "/ENTRY:\"mainCRTStartup\" ${CMAKE_EXE_LINKER_FLAGS}")
+  "/ENTRY:mainCRTStartup ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 if(STATIC_LINK)
