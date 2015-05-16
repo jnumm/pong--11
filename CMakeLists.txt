@@ -4,7 +4,11 @@ project(pong)
 set(PONG_VERSION 1.2)
 message(STATUS "Preparing to build ${PROJECT_NAME} v${PONG_VERSION}")
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${SFML_ROOT}/cmake/Modules
+    /usr/share/SFML/cmake/Modules
+)
 
 # User options
 option(ENABLE_NLS "Build with native language support" ON)
