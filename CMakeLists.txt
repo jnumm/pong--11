@@ -26,25 +26,20 @@ else()
 endif()
 
 # Build flags, platform checks and configure file
-if(STATIC_LINK)
-  if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -pedantic -ffast-math ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_EXE_LINKER_FLAGS}")
+
+  if(STATIC_LINK)
     set(CMAKE_EXE_LINKER_FLAGS
         "-static-libgcc -static-libstdc++ -static ${CMAKE_EXE_LINKER_FLAGS}")
   endif()
-endif()
-
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-std=c++11 USE_FLAG_STDCXX11)
-
-if(USE_FLAG_STDCXX11)
-  add_definitions(-std=c++11)
+elseif(MSVC)
+  set(CMAKE_CXX_FLAGS "/fp:fast ${CMAKE_CXX_FLAGS}")
 endif()
 
 include(CheckCXXSourceCompiles)
 
-if(USE_FLAG_STDCXX11)
-  set(CMAKE_REQUIRED_FLAGS -std=c++11)
-endif()
 check_cxx_source_compiles("
 #include <string>
 int main() {
@@ -53,11 +48,11 @@ int main() {
 }
 " HAVE_STD_TO_STRING)
 
+# Defines CMAKE_INSTALL_FULL_LOCALEDIR for config.hpp
 include(GNUInstallDirs)
 
 configure_file(${CMAKE_SOURCE_DIR}/config.hpp.in
                ${CMAKE_BINARY_DIR}/config.hpp)
-
 include_directories(${CMAKE_BINARY_DIR})
 
 # Subdirectories
