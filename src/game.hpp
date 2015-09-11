@@ -16,9 +16,6 @@
 #ifndef PONG_GAME_HPP
 #define PONG_GAME_HPP
 
-#include <memory>
-#include <random>
-
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
@@ -53,8 +50,6 @@ private:
   Paddle paddle1_;
   Paddle paddle2_;
   std::vector<Ball> balls_;
-
-  std::shared_ptr<std::mt19937> generator_;
 
   bool isPlayer1Cpu_, isPlayer2Cpu_;
 };

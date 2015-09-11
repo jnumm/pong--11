@@ -11,8 +11,7 @@ set(pong_SRCS
     main.cpp
     paddle.cpp
     paddle.hpp
-    prng_user.cpp
-    prng_user.hpp
+    random.hpp
 )
 
 if(NOT HAVE_STD_TO_STRING)

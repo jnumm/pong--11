@@ -35,18 +35,10 @@ Game::Game()
   startMessage_{},
   paddle1_{10.f, getHeight() / 2.f - 50.f},
   paddle2_{getWidth() - 30.f, getHeight() / 2.f - 50.f},
-  balls_(1, {getWidth() / 2.f, getHeight() / 2.f}),
+  balls_(1, {getWidth() / 2.f, getHeight() / 2.f, true, true}),
   isPlayer1Cpu_{false},
   isPlayer2Cpu_{false}
 {
-  std::random_device rd;
-  generator_ = std::make_shared<std::mt19937>(rd());
-
-  for (Ball& ball : balls_) {
-    ball.setGenerator(generator_);
-    ball.setRandomDirection();
-  }
-
   window_.setFramerateLimit(60);
 
   if (!font_.loadFromFile("font.ttf"))
@@ -149,7 +141,7 @@ void Game::update()
                std::end(balls_));
 
   if (shouldAddBall && balls_.size() < maxBalls) {
-    balls_.emplace_back(x, y, false, generator_, true);
+    balls_.emplace_back(x, y, false, true);
   }
 
   window_.setTitle("nBalls: " + std::to_string(balls_.size()));

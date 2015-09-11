@@ -1,4 +1,4 @@
-/* Copyright 2014 Juhani Numminen
+/* Copyright 2014-2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * limitations under the License.
  */
 
-#ifndef PONG_PRNG_USER_HPP
-#define PONG_PRNG_USER_HPP
+#ifndef PONG_RANDOM_HPP
+#define PONG_RANDOM_HPP
 
 #include <memory>
 #include <random>
 
-class PrngUser
+std::mt19937& getRandEngine()
 {
-public:
-  PrngUser(std::shared_ptr<std::mt19937> = nullptr);
+  static std::mt19937 engine{std::random_device{}()};
+  return engine;
+}
 
-  std::shared_ptr<std::mt19937> getGenerator() const;
-  void setGenerator(std::shared_ptr<std::mt19937> generator);
-
-protected:
-  std::shared_ptr<std::mt19937> generator_;
-};
-
-#endif // PONG_PRNG_USER_HPP
+#endif // PONG_RANDOM_HPP

@@ -17,27 +17,16 @@
 
 #include <cmath>
 
+#include "random.hpp"
+
 const float Ball::radius = 10.f;
 const float Ball::speed = 10.f;
 
-Ball::Ball(float x, float y)
-: CircleShape{radius, 100},
-  distribution_{speed * 0.5f, speed},
-  boolDistribution_{0.5},
-  velocityVector_{std::sqrt(speed * speed / 2.f),
-                  std::sqrt(speed * speed / 2.f)},
-  isStopped_{true}
-{
-  setOrigin(getRadius(), getRadius());
-  setPosition(x, y);
-}
+std::uniform_real_distribution<float> Ball::distribution_{speed * 0.5f, speed};
+std::bernoulli_distribution Ball::boolDistribution_{0.5};
 
-Ball::Ball(float x, float y, bool stopped,
-           std::shared_ptr<std::mt19937> generator, bool randomDirection)
+Ball::Ball(float x, float y, bool stopped, bool randomDirection)
 : CircleShape{radius, 100},
-  PrngUser{generator},
-  distribution_{speed * 0.5f, speed},
-  boolDistribution_{0.5},
   velocityVector_{std::sqrt(speed * speed / 2.f),
                   std::sqrt(speed * speed / 2.f)},
   isStopped_{stopped}
@@ -57,13 +46,13 @@ void Ball::updatePosition()
 
 void Ball::setRandomDirection()
 {
-  float x{distribution_(*generator_)};
+  float x{distribution_(getRandEngine())};
   float y{std::sqrt(speed * speed - x * x)};
 
-  if (boolDistribution_(*generator_))
+  if (boolDistribution_(getRandEngine()))
     x = -x;
 
-  if (boolDistribution_(*generator_))
+  if (boolDistribution_(getRandEngine()))
     y = -y;
 
   velocityVector_.x = x;
@@ -72,7 +61,7 @@ void Ball::setRandomDirection()
 
 void Ball::bounceX()
 {
-  float x{distribution_(*generator_)};
+  float x{distribution_(getRandEngine())};
   float y{std::sqrt(speed * speed - x * x)};
 
   if (velocityVector_.x > 0.f)

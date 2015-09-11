@@ -20,17 +20,13 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "prng_user.hpp"
-
-class Ball : public PrngUser, public sf::CircleShape
+class Ball : public sf::CircleShape
 {
 public:
   static const float radius;
   static const float speed;
 
-  Ball(float x, float y);
-  Ball(float x, float y, bool stopped,
-       std::shared_ptr<std::mt19937> generator, bool randomDirection);
+  Ball(float x, float y, bool stopped = true, bool randomDirection = false);
 
   void updatePosition();
 
@@ -56,8 +52,8 @@ public:
   void setBottom(float bottom);
 
 private:
-  std::uniform_real_distribution<float> distribution_;
-  std::bernoulli_distribution boolDistribution_;
+  static std::uniform_real_distribution<float> distribution_;
+  static std::bernoulli_distribution boolDistribution_;
 
   sf::Vector2f velocityVector_;
 
