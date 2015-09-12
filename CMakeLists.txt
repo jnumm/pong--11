@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 project(pong)
 
 set(PONG_VERSION 1.2)
+set(PONG_VERSION_FOURPART ${PONG_VERSION}.0.0)
+string(REPLACE "." "," PONG_VERSION_COMMA ${PONG_VERSION_FOURPART})
+
 message(STATUS "Preparing to build ${PROJECT_NAME} v${PONG_VERSION}")
 
 set(CMAKE_MODULE_PATH
@@ -26,6 +29,10 @@ else()
 endif()
 
 # Build flags, platform checks and configure file
+if(WIN32)
+  add_definitions(-DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN)
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -pedantic -ffast-math ${CMAKE_CXX_FLAGS}")
   set(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_EXE_LINKER_FLAGS}")
@@ -51,9 +58,8 @@ int main() {
 # Defines CMAKE_INSTALL_FULL_LOCALEDIR for config.hpp
 include(GNUInstallDirs)
 
-configure_file(${CMAKE_SOURCE_DIR}/config.hpp.in
-               ${CMAKE_BINARY_DIR}/config.hpp)
-include_directories(${CMAKE_BINARY_DIR})
+configure_file(config.hpp.in config.hpp)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Subdirectories
 add_subdirectory(src)

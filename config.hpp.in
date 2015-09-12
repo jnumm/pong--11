@@ -2,10 +2,16 @@
 #define PONG_CONFIG_HPP
 
 #define PONG_VERSION "@PONG_VERSION@"
+#define PONG_VERSION_COMMA @PONG_VERSION_COMMA@
 
 #cmakedefine ENABLE_NLS 1
 #define LOCALEDIR "@CMAKE_INSTALL_FULL_LOCALEDIR@"
 
 #cmakedefine HAVE_STD_TO_STRING 1
+
+#cmakedefine MSVC 1
+
+// Win32 resource id
+#define IDI_ICON 1
 
 #endif // PONG_CONFIG_HPP

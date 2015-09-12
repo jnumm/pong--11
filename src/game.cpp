@@ -19,6 +19,10 @@
 #include <cmath>
 #include <stdexcept>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "config.hpp"
 #include "direction.hpp"
 #include "i18n.hpp"
@@ -39,6 +43,13 @@ Game::Game()
   isPlayer1Cpu_{false},
   isPlayer2Cpu_{false}
 {
+#ifdef _WIN32
+  HWND hwnd = window_.getSystemHandle();
+  HICON hicon = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON),
+                                 IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+  SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hicon);
+#endif
+
   window_.setFramerateLimit(60);
 
   if (!font_.loadFromFile("font.ttf"))
@@ -143,8 +154,6 @@ void Game::update()
   if (shouldAddBall && balls_.size() < maxBalls) {
     balls_.emplace_back(x, y, false, true);
   }
-
-  window_.setTitle("nBalls: " + std::to_string(balls_.size()));
 }
 
 

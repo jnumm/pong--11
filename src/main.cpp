@@ -18,6 +18,10 @@
 #include <cstring>
 #include <exception>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "config.hpp"
 #include "game.hpp"
 #include "i18n.hpp"
@@ -25,10 +29,10 @@
 
 int main(int argc, char** argv) {
   std::setlocale(LC_ALL, "");
-  #ifdef ENABLE_NLS
+#ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
   textdomain("pong--11");
-  #endif // ENABLE_NLS
+#endif
 
   bool isSingleplayer = false;
 
@@ -38,7 +42,13 @@ int main(int argc, char** argv) {
         isSingleplayer = true;
       }
       else {
+#ifdef _WIN32
+        std::string err{_("Invalid option: ")};
+        err = err + '\'' + argv[i] + '\'';
+        MessageBox(NULL, err.c_str(), "Pong: Error", MB_ICONERROR | MB_OK);
+#else
         std::fprintf(stderr, _("Invalid option: '%s'\n"), argv[i]);
+#endif
         return EXIT_FAILURE;
       }
     }
@@ -48,7 +58,13 @@ int main(int argc, char** argv) {
     Game{}.run(isSingleplayer);
   }
   catch (const std::exception& e) {
+#ifdef _WIN32
+    std::string err{_("Exception: ")};
+    err += e.what();
+    MessageBox(NULL, err.c_str(), "Pong: Error", MB_ICONERROR | MB_OK);
+#else
     std::fprintf(stderr, _("Exception: %s\n"), e.what());
+#endif
     return EXIT_FAILURE;
   }
 }

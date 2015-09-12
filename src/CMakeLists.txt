@@ -12,6 +12,7 @@ set(pong_SRCS
     paddle.cpp
     paddle.hpp
     random.hpp
+    pong.rc
 )
 
 if(NOT HAVE_STD_TO_STRING)
@@ -21,7 +22,14 @@ if(NOT HAVE_STD_TO_STRING)
 endif()
 
 if(MSVC)
-  set(CMAKE_EXE_LINKER_FLAGS "/ENTRY:mainCRTStartup ${CMAKE_EXE_LINKER_FLAGS}")
+  set(CMAKE_EXE_LINKER_FLAGS "/ENTRY:mainCRTStartup \
+  /MANIFESTDEPENDENCY:\"type='win32' \
+  name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+  processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\" \
+  ${CMAKE_EXE_LINKER_FLAGS}")
+elseif(WIN32 AND NOT MSVC)
+  configure_file(pong.exe.manifest.in pong.exe.manifest)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 if(STATIC_LINK)
