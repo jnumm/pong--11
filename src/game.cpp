@@ -114,10 +114,12 @@ void Game::update()
 
     if (ball.getTop() < 0.f || ball.getBottom() > getHeight()) {
       ball.bounceY();
+      ball.updatePosition();
     }
     else if (paddle1_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
       ball.setLeft(paddle1_.getRight());
       ball.bounceX();
+      ball.updatePosition();
       shouldAddBall = true;
       x = ball.getLeft();
       y = ball.getTop();
@@ -125,6 +127,7 @@ void Game::update()
     else if (paddle2_.getGlobalBounds().intersects(ball.getGlobalBounds())) {
       ball.setRight(paddle2_.getLeft());
       ball.bounceX();
+      ball.updatePosition();
       shouldAddBall = true;
       x = ball.getLeft();
       y = ball.getTop();
