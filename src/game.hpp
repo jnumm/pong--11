@@ -30,9 +30,6 @@ public:
 
 private:
   void update();
-  void updatePaddleControls(Paddle& paddle,
-                            sf::Keyboard::Key upKey,
-                            sf::Keyboard::Key downKey);
   void updatePaddleAuto(Paddle& paddle);
   void render();
 

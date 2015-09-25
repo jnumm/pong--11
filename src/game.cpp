@@ -96,15 +96,27 @@ void Game::run(bool isSingleplayer)
 
 void Game::update()
 {
-  if (isPlayer1Cpu_)
+  /*if (isPlayer1Cpu_) {
     updatePaddleAuto(paddle1_);
-  else
-    updatePaddleControls(paddle1_, sf::Keyboard::W,  sf::Keyboard::S);
+  } else {*/
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && paddle1_.getTop() > 0.f) {
+      paddle1_.move(Direction::Up);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+               paddle1_.getBottom() < getHeight()) {
+      paddle1_.move(Direction::Down);
+    }
+  /*}*/
 
-  if (isPlayer2Cpu_)
+  /*if (isPlayer2Cpu_) {*/
     updatePaddleAuto(paddle2_);
-  else
-    updatePaddleControls(paddle2_, sf::Keyboard::Up, sf::Keyboard::Down);
+  /*} else {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && paddle2_.getTop() > 0.f) {
+      paddle2_.move(Direction::Up);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+               paddle2_.getBottom() < getHeight()) {
+      paddle2_.move(Direction::Down);
+    }
+  }*/
 
   bool shouldAddBall = false;
   float x, y;
@@ -156,20 +168,6 @@ void Game::update()
 
   if (shouldAddBall && balls_.size() < maxBalls) {
     balls_.emplace_back(x, y, false, true);
-  }
-}
-
-
-void Game::updatePaddleControls(Paddle& paddle,
-                                sf::Keyboard::Key upKey,
-                                sf::Keyboard::Key downKey)
-{
-  if (sf::Keyboard::isKeyPressed(upKey) && paddle.getTop() > 0.f) {
-    paddle.move(Direction::Up);
-  }
-
-  if (sf::Keyboard::isKeyPressed(downKey) && paddle.getBottom() < getHeight()) {
-    paddle.move(Direction::Down);
   }
 }
 
