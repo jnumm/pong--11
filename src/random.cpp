@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  * limitations under the License.
  */
 
-#ifndef PONG_DIRECTION_HPP
-#define PONG_DIRECTION_HPP
+#include "random.hpp"
 
-#include <cstdint>
+#include <random>
 
-enum class Direction : std::int_fast8_t
+#include "ball.hpp"
+
+float randomFloat()
 {
-  Left,
-  Right,
-  Up,
-  Down
-};
-
-#endif // PONG_DIRECTION_HPP
+  static auto engine = std::mt19937{std::random_device{}()};
+  static auto dist =
+    std::uniform_real_distribution<float>{Ball::speed * 0.5f, Ball::speed};
+  return dist(engine);
+}

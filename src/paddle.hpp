@@ -16,35 +16,33 @@
 #ifndef PONG_PADDLE_HPP
 #define PONG_PADDLE_HPP
 
-#include <cstdint>
+#include <SFML/Graphics/RectangleShape.hpp>
 
-#include <SFML/Graphics.hpp>
+class Ball;
 
-enum class Direction : std::int_fast8_t;
-
-class Paddle : public sf::RectangleShape
+class Paddle
 {
 public:
-  static const float width;
-  static const float height;
-  static const float speed;
-  static const float slowSpeed;
+  static constexpr auto width     =  20.f;
+  static constexpr auto height    = 100.f;
+  static constexpr auto speed     =  20.f;
+  static constexpr auto slowSpeed =   5.f;
 
-  Paddle(float x, float y);
+  Paddle(float x0 = 0.f, float y0 = 0.f, const sf::Color& color = sf::Color::White);
 
-  void move(Direction direction, float offset = speed);
+  float right()  const { return x + width;  }
+  float bottom() const { return y + height; }
 
-  float getRight() const;
-  float getLeft() const;
-  float getTop() const;
-  float getBottom() const;
+  sf::RectangleShape& getRectangleShape();
 
-  void setPoints(int points);
-  void addPoints(int pointsToAdd);
-  int getPoints() const;
+  float x;
+  float y;
+  int points;
 
 private:
-  int points_;
+  sf::RectangleShape rectangleShape;
 };
+
+bool intersects(const Paddle& paddle, const Ball& ball);
 
 #endif // PONG_PADDLE_HPP

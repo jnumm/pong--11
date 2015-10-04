@@ -2,15 +2,14 @@ cmake_minimum_required(VERSION 2.6)
 project(pong)
 
 set(pong_SRCS
-    ball.cpp
     ball.hpp
-    direction.hpp
     game.cpp
     game.hpp
     i18n.hpp
     main.cpp
     paddle.cpp
     paddle.hpp
+    random.cpp
     random.hpp
     pong.rc
 )

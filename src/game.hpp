@@ -24,31 +24,39 @@
 class Game
 {
 public:
+  class NoFontException { };
+
   Game();
 
-  void run(bool isSingleplayer);
+  void run1P();
+//  void run2P();
 
 private:
-  void update();
+  static constexpr auto width  = 800u;
+  static constexpr auto height = 600u;
+
+  static constexpr auto nBalls = 32;
+  static constexpr auto indexDisabled = -1;
+
+  void update1P();
+//  void update2P();
   void updatePaddleAuto(Paddle& paddle);
   void render();
 
-  float getWidth() const;
-  float getHeight() const;
+  // Game objects
+  Ball balls_[nBalls];
+  int nBallsEnabled_;
+  Paddle paddle1_;
+  Paddle paddle2_;
 
-  static const int maxBalls;
-
+  // Objects for drawing
   sf::RenderWindow window_;
-
+  sf::CircleShape circle_;
   sf::Font font_;
   sf::Text text_;
   sf::String startMessage_;
 
-  Paddle paddle1_;
-  Paddle paddle2_;
-  std::vector<Ball> balls_;
-
-  bool isPlayer1Cpu_, isPlayer2Cpu_;
+  bool isRunning_;
 };
 
 #endif // PONG_GAME_HPP

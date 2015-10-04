@@ -16,48 +16,32 @@
 #ifndef PONG_BALL_HPP
 #define PONG_BALL_HPP
 
-#include <random>
+#include <cmath>
 
-#include <SFML/Graphics.hpp>
-
-class Ball : public sf::CircleShape
+class Ball
 {
 public:
-  static const float radius;
-  static const float speed;
+  static constexpr auto radius   =  10.f;
+  static constexpr auto speed    =  10.f;
+  static constexpr auto disabled = -30.f;
 
-  Ball(float x, float y, bool stopped = true, bool randomDirection = false);
+  Ball(float x0 = disabled, float y0 = 0.f,
+       float x_velocity0 = 0.f, float y_velocity0 = 0.f)
+  : x{x0}, y{y0}, x_velocity{x_velocity0}, y_velocity{y_velocity0}
+  { }
 
-  void updatePosition();
+  static float fromOtherComponent(float a)
+  {
+    return std::sqrt(speed * speed - a * a);
+  }
 
-  void setRandomDirection();
+  float right()  const { return x + radius + radius; }
+  float bottom() const { return y + radius + radius; }
 
-  void bounceX();
-  void bounceY();
-
-  void start();
-  void stop();
-  bool isStopped() const;
-
-  float getLeft() const;
-  void setLeft(float left);
-
-  float getRight() const;
-  void setRight(float right);
-
-  float getTop() const;
-  void setTop(float top);
-
-  float getBottom() const;
-  void setBottom(float bottom);
-
-private:
-  static std::uniform_real_distribution<float> distribution_;
-  static std::bernoulli_distribution boolDistribution_;
-
-  sf::Vector2f velocityVector_;
-
-  bool isStopped_;
+  float x;
+  float y;
+  float x_velocity;
+  float y_velocity;
 };
 
 #endif // PONG_BALL_HPP

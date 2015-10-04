@@ -16,13 +16,6 @@
 #ifndef PONG_RANDOM_HPP
 #define PONG_RANDOM_HPP
 
-#include <memory>
-#include <random>
-
-std::mt19937& getRandEngine()
-{
-  static std::mt19937 engine{std::random_device{}()};
-  return engine;
-}
+float randomFloat();
 
 #endif // PONG_RANDOM_HPP

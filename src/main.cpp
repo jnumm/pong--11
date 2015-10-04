@@ -16,7 +16,6 @@
 #include <clocale>
 #include <cstdio>
 #include <cstring>
-#include <exception>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -27,14 +26,15 @@
 #include "i18n.hpp"
 
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   std::setlocale(LC_ALL, "");
 #ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
   textdomain("pong--11");
 #endif
 
-  bool isSingleplayer = false;
+  auto isSingleplayer = false;
 
   if (argc > 1) {
     for (int i = 1; i < argc; ++i) {
@@ -43,9 +43,10 @@ int main(int argc, char** argv) {
       }
       else {
 #ifdef _WIN32
-        std::string err{_("Invalid option: ")};
-        err = err + '\'' + argv[i] + '\'';
-        MessageBox(NULL, err.c_str(), "Pong: Error", MB_ICONERROR | MB_OK);
+        auto err = std::string{_("Invalid option: ")};
+        err += '\'' + argv[i] + '\'';
+        MessageBox(nullptr, err.c_str(), _("Pong: Error"),
+                   MB_ICONERROR | MB_OK);
 #else
         std::fprintf(stderr, _("Invalid option: '%s'\n"), argv[i]);
 #endif
@@ -55,15 +56,17 @@ int main(int argc, char** argv) {
   }
 
   try {
-    Game{}.run(isSingleplayer);
+    //if (isSingleplayer)
+      Game{}.run1P();
+    //else
+    //  Game{}.run2P();
   }
-  catch (const std::exception& e) {
+  catch (const Game::NoFontException&) {
 #ifdef _WIN32
-    std::string err{_("Exception: ")};
-    err += e.what();
-    MessageBox(NULL, err.c_str(), "Pong: Error", MB_ICONERROR | MB_OK);
+    MessageBox(nullptr, _("Error: Failed to load font."), _("Pong: Error"),
+               MB_ICONERROR | MB_OK);
 #else
-    std::fprintf(stderr, _("Exception: %s\n"), e.what());
+    std::fprintf(stderr, _("Error: Failed to load font."));
 #endif
     return EXIT_FAILURE;
   }

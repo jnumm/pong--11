@@ -1,4 +1,4 @@
-/* Copyright 2014 Juhani Numminen
+/* Copyright 2014-2015 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,63 +15,22 @@
 
 #include "paddle.hpp"
 
-#include "direction.hpp"
+#include "ball.hpp"
 
-const float Paddle::width = 20.f;
-const float Paddle::height = 100.f;
-const float Paddle::speed = 20.f;
-const float Paddle::slowSpeed = 10.f;
-
-Paddle::Paddle(float x, float y)
-: RectangleShape{{width, height}},
-  points_{0}
+Paddle::Paddle(float x0, float y0, const sf::Color& color)
+: x{x0}, y{y0}, points{0}, rectangleShape{{width, height}}
 {
-  setPosition(x, y);
+  rectangleShape.setFillColor(color);
 }
 
-void Paddle::move(Direction direction, float offset)
+sf::RectangleShape& Paddle::getRectangleShape()
 {
-  if (direction == Direction::Left)
-    RectangleShape::move(-offset, 0.f);
-  else if (direction == Direction::Right)
-    RectangleShape::move(offset, 0.f);
-  else if (direction == Direction::Up)
-    RectangleShape::move(0.f, -offset);
-  else if (direction == Direction::Down)
-    RectangleShape::move(0.f, offset);
+  rectangleShape.setPosition(x, y);
+  return rectangleShape;
 }
 
-float Paddle::getLeft() const
+bool intersects(const Paddle& paddle, const Ball& ball)
 {
-  return getPosition().x;
-}
-
-float Paddle::getRight() const
-{
-  return getPosition().x + width;
-}
-
-float Paddle::getTop() const
-{
-  return getPosition().y;
-}
-
-float Paddle::getBottom() const
-{
-  return getPosition().y + height;
-}
-
-void Paddle::setPoints(int points)
-{
-  points_ = points;
-}
-
-void Paddle::addPoints(int pointsToAdd)
-{
-  points_ += pointsToAdd;
-}
-
-int Paddle::getPoints() const
-{
-  return points_;
+  return (ball.right()  > paddle.x) && (ball.x < paddle.right()) &&
+         (ball.bottom() > paddle.y) && (ball.y < paddle.bottom());
 }
