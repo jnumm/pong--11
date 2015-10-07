@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(pong)
 
-set(PONG_VERSION 1.2)
+set(PONG_VERSION 1.6)
 set(PONG_VERSION_FOURPART ${PONG_VERSION}.0.0)
 string(REPLACE "." "," PONG_VERSION_COMMA ${PONG_VERSION_FOURPART})
 
