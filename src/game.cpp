@@ -28,8 +28,8 @@
 
 Game::Game()
 : nBallsEnabled_{1},
-  paddle1_{10.f, height / 2.f - 50.f},
-  paddle2_{width - 30.f, height / 2.f - 50.f},
+  paddle1_{10.f, height / 2.f - 50.f, sf::Color::Blue},
+  paddle2_{width - 30.f, height / 2.f - 50.f, sf::Color::Red},
   window_{{width, height}, "Pong v" PONG_VERSION},
   circle_{Ball::radius, 16},
   text_{{}, font_, 50},
@@ -41,6 +41,9 @@ Game::Game()
   balls_[0].y_velocity = Ball::fromOtherComponent(balls_[0].x_velocity);
 
   window_.setFramerateLimit(60);
+
+  circle_.setFillColor(sf::Color::Black);
+  text_.setColor(sf::Color::Black);
 
   if (!font_.loadFromFile("font.ttf"))
     throw NoFontException();
@@ -207,7 +210,7 @@ void Game::updatePaddleAuto(Paddle& paddle)
 
 void Game::render()
 {
-  window_.clear(sf::Color::Black);
+  window_.clear(sf::Color::White);
 
   window_.draw(paddle1_.getRectangleShape());
   window_.draw(paddle2_.getRectangleShape());
