@@ -26,7 +26,7 @@ public:
   static constexpr auto width     =  20.f;
   static constexpr auto height    = 100.f;
   static constexpr auto speed     =  20.f;
-  static constexpr auto slowSpeed =   5.f;
+  static constexpr auto slowSpeed =   8.f;
 
   Paddle(float x0 = 0.f, float y0 = 0.f, const sf::Color& color = sf::Color::White);
 
