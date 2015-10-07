@@ -42,7 +42,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         "-static-libgcc -static-libstdc++ -static ${CMAKE_EXE_LINKER_FLAGS}")
   endif()
 elseif(MSVC)
-  set(CMAKE_CXX_FLAGS "/fp:fast ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS "/MP /fp:fast ${CMAKE_CXX_FLAGS}")
 endif()
 
 include(CheckCXXSourceCompiles)
