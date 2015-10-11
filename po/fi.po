@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pong--11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-15 16:27+0300\n"
-"PO-Revision-Date: 2015-04-15 16:18+0300\n"
+"POT-Creation-Date: 2015-10-11 10:57+0300\n"
+"PO-Revision-Date: 2015-10-11 11:02+0300\n"
 "Last-Translator: Juhani Numminen <juhaninumminen0@gmail.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -17,14 +17,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /home/juhani/Projektit/pong--11/src/main.cpp:37
-msgid "Exception: "
-msgstr "Poikkeus: "
+#: /home/juhani/Projektit/pong--11/src/main.cpp:66
+msgid "Error: Failed to load font.\n"
+msgstr "Virhe: Fontin lataaminen epäonnistui.\n"
 
-#: /home/juhani/Projektit/pong--11/src/game.cpp:47
-msgid "Failed to load font."
-msgstr "Kirjasimen lataaminen ei onnistunut."
+#: /home/juhani/Projektit/pong--11/src/main.cpp:45
+#, c-format
+msgid "Invalid option: '%s'\n"
+msgstr "Virheellinen valitsin: ”%s”\n"
 
-#: /home/juhani/Projektit/pong--11/src/game.cpp:170
-msgid "Press SPACE to start"
-msgstr "Paina välilyöntiä pelin aloittamiseksi"
+#: /home/juhani/Projektit/pong--11/src/main.cpp:50
+#: /home/juhani/Projektit/pong--11/src/main.cpp:68
+msgid "Pong: Error"
+msgstr "Pong: Virhe"
+
+#: /home/juhani/Projektit/pong--11/src/game.cpp:51
+msgid "Press space to start"
+msgstr "Aloita painamalla välilyöntiä"

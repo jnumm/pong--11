@@ -42,13 +42,14 @@ int main(int argc, char** argv)
         isSingleplayer = true;
       }
       else {
+        const auto fmt = _("Invalid option: '%s'\n");
 #ifdef _WIN32
-        auto err = std::string{_("Invalid option: ")};
-        err += '\'' + argv[i] + '\'';
-        MessageBox(nullptr, err.c_str(), _("Pong: Error"),
-                   MB_ICONERROR | MB_OK);
+        auto len = std::snprintf(nullptr, 0, fmt, argv[i]);
+        auto buf = std::vector<char>(len + 1);
+        std::snprintf(buf.data(), buf.size(), fmt, argv[i]);
+        MessageBox(nullptr, buf, _("Pong: Error"), MB_ICONERROR | MB_OK);
 #else
-        std::fprintf(stderr, _("Invalid option: '%s'\n"), argv[i]);
+        std::fprintf(stderr, fmt, argv[i]);
 #endif
         return EXIT_FAILURE;
       }
@@ -62,11 +63,11 @@ int main(int argc, char** argv)
     //  Game{}.run2P();
   }
   catch (const Game::NoFontException&) {
+    const auto msg = _("Error: Failed to load font.\n");
 #ifdef _WIN32
-    MessageBox(nullptr, _("Error: Failed to load font."), _("Pong: Error"),
-               MB_ICONERROR | MB_OK);
+    MessageBox(nullptr, msg, _("Pong: Error"), MB_ICONERROR | MB_OK);
 #else
-    std::fprintf(stderr, _("Error: Failed to load font."));
+    std::fputs(msg, stderr);
 #endif
     return EXIT_FAILURE;
   }

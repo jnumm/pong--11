@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pong--11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-15 16:27+0300\n"
+"POT-Creation-Date: 2015-10-11 10:57+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/juhani/Projektit/pong--11/src/game.cpp:47
-msgid "Failed to load font."
+#: /home/juhani/Projektit/pong--11/src/game.cpp:51
+msgid "Press space to start"
 msgstr ""
 
-#: /home/juhani/Projektit/pong--11/src/game.cpp:170
-msgid "Press SPACE to start"
+#: /home/juhani/Projektit/pong--11/src/main.cpp:45
+#, c-format
+msgid "Invalid option: '%s'\n"
 msgstr ""
 
-#: /home/juhani/Projektit/pong--11/src/main.cpp:37
-msgid "Exception: "
+#: /home/juhani/Projektit/pong--11/src/main.cpp:50
+#: /home/juhani/Projektit/pong--11/src/main.cpp:68
+msgid "Pong: Error"
+msgstr ""
+
+#: /home/juhani/Projektit/pong--11/src/main.cpp:66
+msgid "Error: Failed to load font.\n"
 msgstr ""

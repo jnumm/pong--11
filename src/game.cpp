@@ -48,7 +48,7 @@ Game::Game()
   if (!font_.loadFromFile("font.ttf"))
     throw NoFontException();
 
-  auto startMessageMb = _("Press space to start");
+  const auto startMessageMb = _("Press space to start");
   auto len = std::mbstowcs(nullptr, startMessageMb, 0) + 1;
   auto wstr = std::vector<wchar_t>(len);
   std::mbstowcs(wstr.data(), startMessageMb, wstr.size());
@@ -64,7 +64,7 @@ Game::Game()
 
 void Game::run1P()
 {
-  auto event = sf::Event{};
+  sf::Event event;
 
   while (window_.isOpen()) {
 
