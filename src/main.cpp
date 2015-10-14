@@ -47,7 +47,7 @@ int main(int argc, char** argv)
         auto len = std::snprintf(nullptr, 0, fmt, argv[i]);
         auto buf = std::vector<char>(len + 1);
         std::snprintf(buf.data(), buf.size(), fmt, argv[i]);
-        MessageBox(nullptr, buf, _("Pong: Error"), MB_ICONERROR | MB_OK);
+        MessageBox(nullptr, buf.data(), _("Pong: Error"), MB_ICONERROR | MB_OK);
 #else
         std::fprintf(stderr, fmt, argv[i]);
 #endif
