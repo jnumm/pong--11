@@ -22,9 +22,6 @@
 #include "config.hpp"
 #include "i18n.hpp"
 #include "random.hpp"
-#ifndef HAVE_STD_TO_STRING
-#include "to_string_replacement.hpp"
-#endif
 
 Game::Game()
 : nBallsEnabled_{1},

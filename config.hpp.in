@@ -7,8 +7,6 @@
 #cmakedefine ENABLE_NLS 1
 #define LOCALEDIR "@CMAKE_INSTALL_FULL_LOCALEDIR@"
 
-#cmakedefine HAVE_STD_TO_STRING 1
-
 #cmakedefine MSVC 1
 
 // Win32 resource id

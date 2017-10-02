@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-project(pong)
+cmake_minimum_required(VERSION 3.1)
+project(pong LANGUAGES CXX)
 
 set(PONG_VERSION 1.6)
 set(PONG_VERSION_FOURPART ${PONG_VERSION}.0.0)
@@ -29,12 +29,16 @@ else()
 endif()
 
 # Build flags, platform checks and configure file
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_WIN32_EXECUTABLE ON)
+
 if(WIN32)
   add_definitions(-DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN)
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -pedantic -ffast-math ${CMAKE_CXX_FLAGS}")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(-Wall -Wextra -pedantic -ffast-math)
   set(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_EXE_LINKER_FLAGS}")
 
   if(STATIC_LINK)
@@ -42,18 +46,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         "-static-libgcc -static-libstdc++ -static ${CMAKE_EXE_LINKER_FLAGS}")
   endif()
 elseif(MSVC)
-  set(CMAKE_CXX_FLAGS "/MP /fp:fast ${CMAKE_CXX_FLAGS}")
+  add_compile_options(/MP /fp:fast)
 endif()
-
-include(CheckCXXSourceCompiles)
-
-check_cxx_source_compiles("
-#include <string>
-int main() {
-  std::to_string(0);
-  return 0;
-}
-" HAVE_STD_TO_STRING)
 
 # Defines CMAKE_INSTALL_FULL_LOCALEDIR for config.hpp
 include(GNUInstallDirs)
