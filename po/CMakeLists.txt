@@ -1,23 +1,32 @@
-cmake_minimum_required(VERSION 2.6)
-project(pong)
+include(GNUInstallDirs)
 
-find_package(Gettext)
+# Generating the mo files.
 
-file(GLOB pofiles *.po)
+# Add new language codes here, after "ITEMS".
+foreach(lang IN ITEMS fi)
+  set(infile  "${CMAKE_CURRENT_SOURCE_DIR}/${lang}.po")
+  set(outfile "${CMAKE_CURRENT_BINARY_DIR}/${lang}.mo")
 
-set(_potFile pong--11.pot)
-set(XGETTEXT_CMD xgettext)
-set(_xgettext_option_list -k_ --force-po --package-name=pong--11)
-set(_src_list ${CMAKE_SOURCE_DIR}/src/game.cpp
-              ${CMAKE_SOURCE_DIR}/src/main.cpp)
+  add_custom_command(OUTPUT "${outfile}" DEPENDS "${infile}"
+    COMMAND msgfmt --check --statistics --output "${outfile}" "${infile}")
 
-GETTEXT_CREATE_TRANSLATIONS(${_potFile} ALL ${pofiles})
+  install(FILES "${outfile}"
+          DESTINATION "${CMAKE_INSTALL_LOCALEDIR}/${lang}/LC_MESSAGES"
+          RENAME pong--11.mo)
 
-# http://stackoverflow.com/questions/2694742/is-there-a-cmake-function-to-update-pot-files#11606896
-add_custom_command(OUTPUT ${_potFile}
-  COMMAND ${XGETTEXT_CMD} ${_xgettext_option_list} -o ${_potFile} ${_src_list}
-  DEPENDS ${_src_list}
-  COMMENT "Extract translatable messages to ${_potFile}"
-)
+  list(APPEND mo_files "${outfile}")
+endforeach()
 
-add_custom_target(pot_file DEPENDS ${_potFile})
+add_custom_target(translations ALL DEPENDS ${mo_files})
+
+# Updating the pot file.
+
+set(pot_file "${CMAKE_CURRENT_SOURCE_DIR}/pong--11.pot")
+set(src_list "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/main.cpp")
+
+add_custom_command(OUTPUT "${pot_file}" DEPENDS ${src_list}
+  COMMAND xgettext --force-po --keyword _
+          --package-name=pong--11 --package-version=${PROJECT_VERSION}
+          --output "${pot_file}" ${src_list})
+
+add_custom_target(update_pot_file DEPENDS "${pot_file}")

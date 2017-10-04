@@ -31,6 +31,7 @@ int main(int argc, char** argv)
   std::setlocale(LC_ALL, "");
 #ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
+  bind_textdomain_codeset("pong--11", "UTF-8");
   textdomain("pong--11");
 #endif
 

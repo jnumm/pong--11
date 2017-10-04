@@ -27,7 +27,7 @@ Game::Game()
 : nBallsEnabled_{1},
   paddle1_{10.f, height / 2.f - 50.f, sf::Color::Blue},
   paddle2_{width - 30.f, height / 2.f - 50.f, sf::Color::Red},
-  window_{{width, height}, "Pong v" PONG_VERSION},
+  window_{{width, height}, "Pong v" PROJECT_VERSION},
   circle_{Ball::radius, 16},
   text_{{}, font_, 50},
   isRunning_{false}

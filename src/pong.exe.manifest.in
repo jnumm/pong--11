@@ -3,7 +3,7 @@
 <assemblyIdentity
     type="win32"
     name="JNumm.Games.Pong--11"
-    version="@PONG_VERSION_FOURPART@"
+    version="@PROJECT_VERSION_FOURPART@"
     processorArchitecture="*"
 />
 <dependency>
