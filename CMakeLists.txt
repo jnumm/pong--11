@@ -10,8 +10,10 @@ list(APPEND CMAKE_MODULE_PATH
   "${SFML_ROOT}/cmake/Modules" "/usr/share/SFML/cmake/Modules")
 
 # User options
-option(ENABLE_NLS "Build with native language support" ON)
-option(STATIC_LINK "Link statically" OFF)
+option(ENABLE_NLS "Build with native language support (using Gettext).\
+  Default: TRUE on a Unix-like system, FALSE otherwise." ${UNIX})
+option(STATIC_LINK "Link statically.\
+  Default: TRUE on a Windows system, FALSE otherwise." ${WIN32})
 
 if(ENABLE_NLS)
   message(STATUS "Building with native language support")
