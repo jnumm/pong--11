@@ -40,7 +40,7 @@ Game::Game()
   window_.setFramerateLimit(60);
 
   circle_.setFillColor(sf::Color::Black);
-  text_.setColor(sf::Color::Black);
+  text_.setFillColor(sf::Color::Green);
 
   if (!font_.loadFromFile("font.ttf"))
     throw NoFontException();
