@@ -13,7 +13,7 @@ add_executable(pong
   main.cpp
   paddle.cpp paddle.hpp
   random.cpp random.hpp
-  pong.rc)
+  pong.exe.manifest pong.rc)
 
 set_target_properties(pong PROPERTIES
   CXX_STANDARD 11
@@ -28,25 +28,14 @@ set_target_properties(pong PROPERTIES
 
 # LINK_FLAGS are different since they do not support generator expressions
 if(MSVC)
-  # Enables Windows “Visual Styles”, i.e. native look and feel
-  set_property(TARGET pong PROPERTY LINK_FLAGS
-    "/ENTRY:mainCRTStartup \
-     /MANIFESTDEPENDENCY:\"type='win32' \
-                           name='Microsoft.Windows.Common-Controls' \
-                           version='6.0.0.0' \
-                           processorArchitecture='*' \
-                           publicKeyToken='6595b64144ccf1df' \
-                           language='*'\"")
+  # No manifest generation since we have one already.
+  set_property(TARGET pong PROPERTY LINK_FLAGS "/ENTRY:mainCRTStartup /MANIFEST:NO")
 else()
   set_property(TARGET pong PROPERTY LINK_FLAGS "-Wl,--as-needed")
   if(STATIC_LINK)
     set_property(TARGET pong APPEND_STRING PROPERTY LINK_FLAGS
       " -static-libgcc -static-libstdc++ -static ")
   endif()
-endif()
-
-if(WIN32 AND NOT MSVC)
-  configure_file(pong.exe.manifest.in pong.exe.manifest)
 endif()
 
 install(TARGETS pong DESTINATION ${CMAKE_INSTALL_BINDIR})

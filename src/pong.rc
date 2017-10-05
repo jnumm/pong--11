@@ -3,9 +3,7 @@
 
 #include "config.hpp"
 
-#ifndef MSVC
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "pong.exe.manifest"
-#endif
 
 IDI_ICON ICON DISCARDABLE "pong.ico"
 
