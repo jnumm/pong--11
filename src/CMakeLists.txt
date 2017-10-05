@@ -19,22 +19,23 @@ set_target_properties(pong PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   WIN32_EXECUTABLE ON
-  COMPILE_OPTIONS
-    "$<IF:$<CXX_COMPILER_ID:MSVC>,/MP;/fp:fast,-Wall;-Wextra;-pedantic;-ffast-math>"
-  COMPILE_DEFINITIONS
-    "$<$<PLATFORM_ID:Windows>:VC_EXTRALEAN;WIN32_LEAN_AND_MEAN>"
   INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR};${SFML_INCLUDE_DIR}"
   LINK_LIBRARIES "${SFML_LIBRARIES};${SFML_DEPENDENCIES}")
 
-# LINK_FLAGS are different since they do not support generator expressions
+if(WIN32)
+  target_compile_definitions(pong PRIVATE VC_EXTRALEAN WIN32_LEAN_AND_MEAN)
+endif()
+
 if(MSVC)
+  target_compile_options(pong PRIVATE /MP /fp:fast)
   # No manifest generation since we have one already.
   set_property(TARGET pong PROPERTY LINK_FLAGS "/ENTRY:mainCRTStartup /MANIFEST:NO")
 else()
+  target_compile_options(pong PRIVATE -Wall -Wextra -pedantic -ffast-math)
   set_property(TARGET pong PROPERTY LINK_FLAGS "-Wl,--as-needed")
   if(STATIC_LINK)
     set_property(TARGET pong APPEND_STRING PROPERTY LINK_FLAGS
-      " -static-libgcc -static-libstdc++ -static ")
+      " -static-libgcc -static-libstdc++ -static")
   endif()
 endif()
 
