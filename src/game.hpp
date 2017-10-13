@@ -32,8 +32,8 @@ public:
 //  void run2P();
 
 private:
-  static constexpr auto width  = 800u;
-  static constexpr auto height = 600u;
+  static constexpr auto width  = 800;
+  static constexpr auto height = 600;
 
   static constexpr auto nBalls = 32;
   static constexpr auto indexDisabled = -1;
