@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,32 @@
 #include <clocale>
 #include <cstdio>
 #include <cstring>
+#include <string_view>
+#include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
+#include <boost/format.hpp>
+
 #include "config.hpp"
 #include "game.hpp"
 #include "i18n.hpp"
 
+namespace {
 
-int main(int argc, char** argv)
-{
+void reportError(std::string_view msg) {
+#ifdef _WIN32
+  MessageBox(nullptr, msg.data(), _("Pong: Error"), MB_ICONERROR | MB_OK);
+#else
+  std::fputs(msg.data(), stderr);
+#endif
+}
+
+} // namespace
+
+int main(int argc, char* argv[]) {
   std::setlocale(LC_ALL, "");
 #ifdef ENABLE_NLS
   bindtextdomain("pong--11", LOCALEDIR);
@@ -35,41 +49,26 @@ int main(int argc, char** argv)
   textdomain("pong--11");
 #endif
 
-  auto isSingleplayer = false;
+  auto isSingleplayer{false};
 
   if (argc > 1) {
-    for (int i = 1; i < argc; ++i) {
-      if (std::strcmp(argv[i], "-s") == 0) {
+    for (auto arg : std::vector<const char*>{argv + 1, argv + argc}) {
+      if (std::strcmp(arg, "-s") == 0) {
         isSingleplayer = true;
-      }
-      else {
-        const auto fmt = _("Invalid option: '%s'\n");
-#ifdef _WIN32
-        auto len = std::snprintf(nullptr, 0, fmt, argv[i]);
-        auto buf = std::vector<char>(len + 1);
-        std::snprintf(buf.data(), buf.size(), fmt, argv[i]);
-        MessageBox(nullptr, buf.data(), _("Pong: Error"), MB_ICONERROR | MB_OK);
-#else
-        std::fprintf(stderr, fmt, argv[i]);
-#endif
+      } else {
+        reportError(str(boost::format(_("Invalid option '%1%'\n")) % arg));
         return EXIT_FAILURE;
       }
     }
   }
 
   try {
-    //if (isSingleplayer)
-      Game{}.run1P();
-    //else
+    // if (isSingleplayer)
+    Game{}.run1P();
+    // else
     //  Game{}.run2P();
-  }
-  catch (const Game::NoFontException&) {
-    const auto msg = _("Error: Failed to load font.\n");
-#ifdef _WIN32
-    MessageBox(nullptr, msg, _("Pong: Error"), MB_ICONERROR | MB_OK);
-#else
-    std::fputs(msg, stderr);
-#endif
+  } catch (const Game::NoFontException&) {
+    reportError(_("Error: Failed to load font.\n"));
     return EXIT_FAILURE;
   }
 }

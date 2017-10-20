@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.8)
 project(pong VERSION 1.6 LANGUAGES CXX)
 
 set(PROJECT_VERSION_FOURPART "${PROJECT_VERSION}.0.0")
