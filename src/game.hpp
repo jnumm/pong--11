@@ -20,6 +20,7 @@
 
 #include "ball.hpp"
 #include "paddle.hpp"
+#include "random.hpp"
 
 class Game
 {
@@ -57,6 +58,7 @@ private:
   sf::String startMessage_;
 
   bool isRunning_;
+  Random random_;
 };
 
 #endif // PONG_GAME_HPP

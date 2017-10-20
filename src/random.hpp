@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,19 @@
 #ifndef PONG_RANDOM_HPP
 #define PONG_RANDOM_HPP
 
-float randomFloat();
+#include <random>
+
+#include "ball.hpp"
+
+class Random {
+ public:
+  float randomFloat() { return fDist(engine); }
+  bool randomBool() { return bDist(engine); }
+
+ private:
+  std::mt19937 engine{std::random_device{}()};
+  std::uniform_real_distribution<float> fDist{Ball::speed * 0.5f, Ball::speed};
+  std::bernoulli_distribution bDist{0.5};
+};
 
 #endif // PONG_RANDOM_HPP

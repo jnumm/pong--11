@@ -21,7 +21,6 @@
 
 #include "config.hpp"
 #include "i18n.hpp"
-#include "random.hpp"
 
 Game::Game()
 : nBallsEnabled_{1},
@@ -32,10 +31,7 @@ Game::Game()
   text_{{}, font_, 50},
   isRunning_{false}
 {
-  balls_[0].x = width / 2.f;
-  balls_[0].y = height / 2.f;
-  balls_[0].x_velocity = randomFloat();
-  balls_[0].y_velocity = Ball::fromOtherComponent(balls_[0].x_velocity);
+  balls_[0].setVelocityRand(random_, true);
 
   window_.setFramerateLimit(60);
 
@@ -132,8 +128,6 @@ void Game::update1P()
 
       toEnableX = balls_[i].x;
       toEnableY = balls_[i].y;
-      toEnableXVel = randomFloat();
-      toEnableYVel = Ball::fromOtherComponent(toEnableXVel);
     }
     else if (intersects(paddle2_, balls_[i])) {
       balls_[i].x = paddle2_.x - Ball::radius*2;
@@ -141,8 +135,6 @@ void Game::update1P()
 
       toEnableX = balls_[i].x;
       toEnableY = balls_[i].y;
-      toEnableXVel = -randomFloat();
-      toEnableYVel = Ball::fromOtherComponent(toEnableXVel);
     }
 
     if (balls_[i].right() < 0.f) {
@@ -160,8 +152,6 @@ void Game::update1P()
   if (nBallsEnabled_ == 0) {
     toEnableX = width / 2.f - Ball::radius;
     toEnableY = height / 2.f - Ball::radius;
-    toEnableXVel = randomFloat();
-    toEnableYVel = Ball::fromOtherComponent(toEnableXVel);
     isRunning_ = false;
   }
 
@@ -190,7 +180,9 @@ void Game::update1P()
 void Game::updatePaddleAuto(Paddle& paddle)
 {
   for (const auto& ball : balls_) {
-    if (ball.x == Ball::disabled) continue;
+    if (ball.isDisabled()) {
+      continue;
+    }
 
     if (std::abs(ball.x - paddle.x) < 200.f) {
       if (paddle.y > ball.y) {
@@ -213,7 +205,9 @@ void Game::render()
   window_.draw(paddle2_.getRectangleShape());
 
   for (const auto& ball : balls_) {
-    if (ball.x == Ball::disabled) continue;
+    if (ball.isDisabled()) {
+      continue;
+    }
 
     circle_.setPosition(ball.x, ball.y);
     window_.draw(circle_);

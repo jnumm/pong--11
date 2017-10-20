@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,36 @@
 #ifndef PONG_BALL_HPP
 #define PONG_BALL_HPP
 
-#include <cmath>
+class Random;
 
-class Ball
-{
-public:
-  static constexpr auto radius   =  10.f;
-  static constexpr auto speed    =  10.f;
-  static constexpr auto disabled = -30.f;
+class Ball {
+ public:
+  static constexpr auto radius{10.f};
+  static constexpr auto speed{10.f};
+  static constexpr auto disabled{-30.f};
 
-  Ball(float x0 = disabled, float y0 = 0.f,
-       float x_velocity0 = 0.f, float y_velocity0 = 0.f)
-  : x{x0}, y{y0}, x_velocity{x_velocity0}, y_velocity{y_velocity0}
-  { }
+  void move();
 
-  static float fromOtherComponent(float a)
-  {
-    return std::sqrt(speed * speed - a * a);
-  }
+  void flipXVelocity();
+  void flipYVelocity();
+  void flipVelocityRand(Random& random);
 
-  float right()  const { return x + radius + radius; }
-  float bottom() const { return y + radius + radius; }
+  void setVelocityFromX(float new_x_velocity);
+  void setVelocityRand(Random& random, bool flipRandomly = false);
 
-  float x;
-  float y;
-  float x_velocity;
-  float y_velocity;
+  void disable();
+  bool isDisabled() const;
+
+  float right() const;
+  float bottom() const;
+
+  void setRight(float xForRight);
+  void setBottom(float yForBottom);
+
+  float x{disabled};
+  float y{0.f};
+  float x_velocity{0.f};
+  float y_velocity{0.f};
 };
 
 #endif // PONG_BALL_HPP

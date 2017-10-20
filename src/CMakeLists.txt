@@ -7,12 +7,12 @@ find_package(SFML 2 REQUIRED graphics window system)
 configure_file(config.hpp.in config.hpp)
 
 add_executable(pong
-  ball.hpp
+  ball.cpp ball.hpp
   game.cpp game.hpp
   i18n.hpp
   main.cpp
   paddle.cpp paddle.hpp
-  random.cpp random.hpp
+  random.hpp
   pong.exe.manifest pong.rc)
 
 set_target_properties(pong PROPERTIES
