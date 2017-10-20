@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,16 @@
 
 #include "ball.hpp"
 
-Paddle::Paddle(float x0, float y0, const sf::Color& color)
-: x{x0}, y{y0}, points{0}, rectangleShape{{width, height}}
-{
+Paddle::Paddle(float x0, float y0, const sf::Color& color) : x{x0}, y{y0} {
   rectangleShape.setFillColor(color);
 }
 
-sf::RectangleShape& Paddle::getRectangleShape()
-{
+const sf::RectangleShape& Paddle::getRectangleShape() const {
   rectangleShape.setPosition(x, y);
   return rectangleShape;
 }
 
-bool intersects(const Paddle& paddle, const Ball& ball)
-{
-  return (ball.right()  > paddle.x) && (ball.x < paddle.right()) &&
+bool intersects(const Paddle& paddle, const Ball& ball) {
+  return (ball.right() > paddle.x) && (ball.x < paddle.right()) &&
          (ball.bottom() > paddle.y) && (ball.y < paddle.bottom());
 }
