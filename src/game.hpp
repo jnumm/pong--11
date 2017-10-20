@@ -21,7 +21,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
-#include "config.hpp"
 #include "paddle.hpp"
 #include "random.hpp"
 
@@ -46,22 +45,20 @@ class Game {
   void updateBalls();
   void render();
 
-  std::array<Ball, nBalls> balls_{Ball{width / 2.f, height / 2.f}};
-  int nBallsEnabled_ = 1;
-  Paddle paddle1_{10.f, height / 2.f - 50.f, sf::Color::Blue};
-  Paddle paddle2_{width - 30.f, height / 2.f - 50.f, sf::Color::Red};
+  std::array<Ball, nBalls> balls;
+  int nBallsEnabled{1};
+  Paddle paddle1;
+  Paddle paddle2;
 
-  sf::RenderWindow window_{sf::VideoMode{static_cast<unsigned>(width),
-                                         static_cast<unsigned>(height)},
-                           "Pong v" PROJECT_VERSION};
-  sf::CircleShape circle_{Ball::radius, 16};
-  sf::Font font_;
-  sf::Text text_{sf::String{}, font_, 50};
-  const sf::String startMessage_;
+  sf::RenderWindow window;
+  sf::CircleShape circle;
+  sf::Font font;
+  sf::Text text;
+  const sf::String startMessage;
 
-  bool isRunning_{false};
+  bool isRunning{false};
 
-  Random random_;
+  Random random;
 };
 
 #endif // PONG_GAME_HPP

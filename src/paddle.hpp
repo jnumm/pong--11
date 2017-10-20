@@ -30,8 +30,8 @@ class Paddle {
 
   Paddle(float x0, float y0, const sf::Color& color);
 
-  float right() const { return x + width; }
-  float bottom() const { return y + height; }
+  float right() const;
+  float bottom() const;
 
   const sf::RectangleShape& getRectangleShape() const;
 
@@ -40,7 +40,7 @@ class Paddle {
   int points{0};
 
  private:
-  mutable sf::RectangleShape rectangleShape{{width, height}};
+  mutable sf::RectangleShape rectangleShape;
 };
 
 bool intersects(const Paddle& paddle, const Ball& ball);

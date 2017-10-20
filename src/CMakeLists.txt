@@ -14,7 +14,7 @@ add_executable(pong
   i18n.hpp
   main.cpp
   paddle.cpp paddle.hpp
-  random.hpp
+  random.cpp random.hpp
   pong.exe.manifest pong.rc)
 
 set_target_properties(pong PROPERTIES

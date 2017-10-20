@@ -17,8 +17,17 @@
 
 #include "ball.hpp"
 
-Paddle::Paddle(float x0, float y0, const sf::Color& color) : x{x0}, y{y0} {
+Paddle::Paddle(float x0, float y0, const sf::Color& color)
+    : x{x0}, y{y0}, rectangleShape{{width, height}} {
   rectangleShape.setFillColor(color);
+}
+
+float Paddle::right() const {
+  return x + width;
+}
+
+float Paddle::bottom() const {
+  return y + height;
 }
 
 const sf::RectangleShape& Paddle::getRectangleShape() const {
