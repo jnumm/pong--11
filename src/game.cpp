@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,23 @@
 
 #include "game.hpp"
 
+#include <string_view>
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
-#include "config.hpp"
 #include "i18n.hpp"
 
-Game::Game()
-: nBallsEnabled_{1},
-  paddle1_{10.f, height / 2.f - 50.f, sf::Color::Blue},
-  paddle2_{width - 30.f, height / 2.f - 50.f, sf::Color::Red},
-  window_{{width, height}, "Pong v" PROJECT_VERSION},
-  circle_{Ball::radius, 16},
-  text_{{}, font_, 50},
-  isRunning_{false}
-{
+namespace {
+
+sf::String toSfString(std::string_view utf8String) {
+  return sf::String::fromUtf8(begin(utf8String), end(utf8String));
+}
+
+} // namespace
+
+Game::Game() : startMessage_{toSfString(_("Press space to start"))} {
   balls_[0].setVelocityRand(random_, true);
 
   window_.setFramerateLimit(60);
@@ -38,43 +39,35 @@ Game::Game()
   circle_.setFillColor(sf::Color::Black);
   text_.setFillColor(sf::Color::Green);
 
-  if (!font_.loadFromFile("font.ttf"))
+  if (!font_.loadFromFile("font.ttf")) {
     throw NoFontException();
-
-  const auto startMessageMb = _("Press space to start");
-  auto len = std::mbstowcs(nullptr, startMessageMb, 0) + 1;
-  auto wstr = std::vector<wchar_t>(len);
-  std::mbstowcs(wstr.data(), startMessageMb, wstr.size());
-  startMessage_ = wstr.data();
+  }
 
 #ifdef _WIN32
-  auto hwnd = window_.getSystemHandle();
-  auto icon = LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_ICON),
-                        IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+  auto hwnd{window_.getSystemHandle()};
+  auto icon{LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_ICON),
+                      IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE)};
   SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(icon));
 #endif
 }
 
-void Game::run1P()
-{
+void Game::run1P() {
   sf::Event event;
 
   while (window_.isOpen()) {
-
     while (window_.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
         window_.close();
-      }
-      else if (event.type == sf::Event::KeyPressed) {
+      } else if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
-        case sf::Keyboard::Escape:
-          window_.close();
-          break;
-        case sf::Keyboard::Space:
-          isRunning_ = !isRunning_;
-          break;
-        default:
-          break;
+          case sf::Keyboard::Escape:
+            window_.close();
+            break;
+          case sf::Keyboard::Space:
+            isRunning_ = !isRunning_;
+            break;
+          default:
+            break;
         }
       }
     }
@@ -84,92 +77,28 @@ void Game::run1P()
   }
 }
 
-void Game::update1P()
-{
-  // Control
+void Game::update1P() {
+  if (!isRunning_) {
+    return;
+  }
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && paddle1_.y > 0.f) {
     paddle1_.y -= Paddle::speed;
-  }
-  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-           paddle1_.bottom() < height) {
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+             paddle1_.bottom() < height) {
     paddle1_.y += Paddle::speed;
   }
 
-  if (!isRunning_) return;
-
   updatePaddleAuto(paddle2_);
 
-  // Ball logic
-
-  auto toEnableX = Ball::disabled;
-  auto toEnableY = 0.f;
-  auto toEnableXVel = 0.f;
-  auto toEnableYVel = 0.f;
-  auto toEnableIndex = indexDisabled;
-
-  for (auto i = 0; i < nBalls; i++) {
-    if (balls_[i].x == Ball::disabled) {
-      if (toEnableIndex == indexDisabled) {
-        toEnableIndex = i;
-      }
-      continue;
-    }
-
-    balls_[i].x += balls_[i].x_velocity;
-    balls_[i].y += balls_[i].y_velocity;
-
-    if (balls_[i].y < 0.f || balls_[i].bottom() > height) {
-      balls_[i].y_velocity = -balls_[i].y_velocity;
-    }
-
-    if (intersects(paddle1_, balls_[i])) {
-      balls_[i].x = paddle1_.right();
-      balls_[i].x_velocity = -balls_[i].x_velocity;
-
-      toEnableX = balls_[i].x;
-      toEnableY = balls_[i].y;
-    }
-    else if (intersects(paddle2_, balls_[i])) {
-      balls_[i].x = paddle2_.x - Ball::radius*2;
-      balls_[i].x_velocity = -balls_[i].x_velocity;
-
-      toEnableX = balls_[i].x;
-      toEnableY = balls_[i].y;
-    }
-
-    if (balls_[i].right() < 0.f) {
-      paddle2_.points++;
-      balls_[i].x = Ball::disabled;
-      nBallsEnabled_--;
-    }
-    else if (balls_[i].x > width) {
-      paddle1_.points++;
-      balls_[i].x = Ball::disabled;
-      nBallsEnabled_--;
-    }
-  }
-
-  if (nBallsEnabled_ == 0) {
-    toEnableX = width / 2.f - Ball::radius;
-    toEnableY = height / 2.f - Ball::radius;
-    isRunning_ = false;
-  }
-
-  if (toEnableX != Ball::disabled && toEnableIndex != indexDisabled) {
-    balls_[toEnableIndex].x = toEnableX;
-    balls_[toEnableIndex].y = toEnableY;
-    balls_[toEnableIndex].x_velocity = toEnableXVel;
-    balls_[toEnableIndex].y_velocity = toEnableYVel;
-    nBallsEnabled_++;
-  }
+  updateBalls();
 }
 
-//void Game::run2P()
+// void Game::run2P()
 //{
 //}
 
-
-//void Game::update2p()
+// void Game::update2p()
 //{
 //}
 
@@ -177,8 +106,7 @@ void Game::update1P()
  * This is the CPU player logic.
  * The paddle will only move if it is a certain distance away from the ball.
  */
-void Game::updatePaddleAuto(Paddle& paddle)
-{
+void Game::updatePaddleAuto(Paddle& paddle) {
   for (const auto& ball : balls_) {
     if (ball.isDisabled()) {
       continue;
@@ -189,7 +117,7 @@ void Game::updatePaddleAuto(Paddle& paddle)
         paddle.y -= Paddle::slowSpeed;
         return;
       }
-      else if (paddle.bottom() < ball.bottom()) {
+      if (paddle.bottom() < ball.bottom()) {
         paddle.y += Paddle::slowSpeed;
         return;
       }
@@ -197,8 +125,68 @@ void Game::updatePaddleAuto(Paddle& paddle)
   }
 }
 
-void Game::render()
-{
+void Game::updateBalls() {
+  Ball toEnableBall{};
+  Ball* freePlace{nullptr};
+
+  for (auto& ball : balls_) {
+    if (ball.isDisabled()) {
+      if (!freePlace) {
+        freePlace = &ball;
+      }
+
+      continue;
+    }
+
+    ball.move();
+
+    if (ball.y < 0.f) {
+      ball.y = 0.f;
+      ball.flipYVelocity();
+    } else if (ball.bottom() > height) {
+      ball.setBottom(height);
+      ball.flipYVelocity();
+    }
+
+    if (intersects(paddle1_, ball)) {
+      ball.x = paddle1_.right();
+      ball.flipXVelocity();
+
+      toEnableBall = ball;
+      toEnableBall.setVelocityRand(random_);
+    } else if (intersects(paddle2_, ball)) {
+      ball.setRight(paddle2_.x);
+      ball.flipXVelocity();
+
+      toEnableBall = ball;
+      toEnableBall.setVelocityRand(random_);
+      toEnableBall.flipXVelocity();
+    }
+
+    if (ball.right() < 0.f) {
+      paddle2_.points += 1;
+      ball.disable();
+      nBallsEnabled_ -= 1;
+    } else if (ball.x > width) {
+      paddle1_.points += 1;
+      ball.disable();
+      nBallsEnabled_ -= 1;
+    }
+  }
+
+  if (nBallsEnabled_ == 0) {
+    toEnableBall = {width / 2.f - Ball::radius, height / 2.f - Ball::radius};
+    toEnableBall.setVelocityRand(random_, true);
+    isRunning_ = false;
+  }
+
+  if (!toEnableBall.isDisabled() && freePlace) {
+    *freePlace = toEnableBall;
+    nBallsEnabled_ += 1;
+  }
+}
+
+void Game::render() {
   window_.clear(sf::Color::White);
 
   window_.draw(paddle1_.getRectangleShape());

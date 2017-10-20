@@ -1,4 +1,4 @@
-/* Copyright 2014-2015 Juhani Numminen
+/* Copyright 2014-2017 Juhani Numminen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,48 +16,51 @@
 #ifndef PONG_GAME_HPP
 #define PONG_GAME_HPP
 
+#include <array>
+
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
+#include "config.hpp"
 #include "paddle.hpp"
 #include "random.hpp"
 
-class Game
-{
-public:
-  class NoFontException { };
+class Game {
+ public:
+  class NoFontException {};
 
   Game();
 
   void run1P();
-//  void run2P();
+  // void run2P();
 
-private:
-  static constexpr auto width  = 800;
-  static constexpr auto height = 600;
+ private:
+  static constexpr auto width{800};
+  static constexpr auto height{600};
 
-  static constexpr auto nBalls = 32;
-  static constexpr auto indexDisabled = -1;
+  static constexpr auto nBalls{32};
 
   void update1P();
-//  void update2P();
+  // void update2P();
   void updatePaddleAuto(Paddle& paddle);
+  void updateBalls();
   void render();
 
-  // Game objects
-  Ball balls_[nBalls];
-  int nBallsEnabled_;
-  Paddle paddle1_;
-  Paddle paddle2_;
+  std::array<Ball, nBalls> balls_{Ball{width / 2.f, height / 2.f}};
+  int nBallsEnabled_ = 1;
+  Paddle paddle1_{10.f, height / 2.f - 50.f, sf::Color::Blue};
+  Paddle paddle2_{width - 30.f, height / 2.f - 50.f, sf::Color::Red};
 
-  // Objects for drawing
-  sf::RenderWindow window_;
-  sf::CircleShape circle_;
+  sf::RenderWindow window_{sf::VideoMode{static_cast<unsigned>(width),
+                                         static_cast<unsigned>(height)},
+                           "Pong v" PROJECT_VERSION};
+  sf::CircleShape circle_{Ball::radius, 16};
   sf::Font font_;
-  sf::Text text_;
-  sf::String startMessage_;
+  sf::Text text_{sf::String{}, font_, 50};
+  const sf::String startMessage_;
 
-  bool isRunning_;
+  bool isRunning_{false};
+
   Random random_;
 };
 
