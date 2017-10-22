@@ -14,13 +14,14 @@
  */
 
 #include <clocale>
-#include <cstdio>
 #include <cstring>
 #include <string_view>
 #include <vector>
 
 #ifdef _WIN32
-#include <windows.h>
+#include <Windows.h>
+#else
+#include <iostream>
 #endif
 
 #include <boost/format.hpp>
@@ -35,7 +36,7 @@ void reportError(std::string_view msg) {
 #ifdef _WIN32
   MessageBox(nullptr, msg.data(), _("Pong: Error"), MB_ICONERROR | MB_OK);
 #else
-  std::fputs(msg.data(), stderr);
+  std::cerr << msg;
 #endif
 }
 
